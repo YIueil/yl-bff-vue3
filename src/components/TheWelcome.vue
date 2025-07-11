@@ -5,10 +5,12 @@ import ToolingIcon from './icons/IconTooling.vue'
 import EcosystemIcon from './icons/IconEcosystem.vue'
 import CommunityIcon from './icons/IconCommunity.vue'
 import SupportIcon from './icons/IconSupport.vue'
+import IconLoading from '@/components/icons/IconLoading.vue'
 </script>
 
 <template>
   <WelcomeItem>
+    <IconLoading />
     <template #icon>
       <DocumentationIcon />
     </template>

@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { Icon } from "@iconify/vue";
+
 </script>
 
 <template>
   <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
+    <Icon icon="mdi-light:home" width="46" height="46" color="red"></Icon>
     <div class="wrapper">
       <HelloWorld msg="You did it!" />
 

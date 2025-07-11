@@ -1,39 +1,30 @@
 # yl-bff-vue3
+YIueil's 的 vue3 前端框架。
 
-This template should help get you started developing with Vue 3 in Vite.
+> NodeJS: 20.14.5
+> 
+> PNPM: 10.13.0
+> 
+> Vue3: 3.4.29
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+## 1 启动项目
+### 1.1 依赖安装
+```bash
 pnpm install
 ```
 
-### Compile and Hot-Reload for Development
-
-```sh
+### 1.2 启动项目
+默认在端口`3000`启动
+```bash
 pnpm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm run lint
-```
+## 2 框架功能
+### 2.1 Iconify 组件集成
+> [Iconify](https://icon-sets.iconify.design) 是一个集成了大量icon的开源图标项目。
+>
+> [官方文档](https://iconify.design/docs/icon-components/vue/) 和Vue的集成方式。
+>
+> 离线使用?
+> 
+> 通过 UnoCss 使用。
