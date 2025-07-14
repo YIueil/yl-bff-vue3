@@ -3,18 +3,19 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
 // https://vitejs.cn/vite6-cn/config/
 export default defineConfig({
   plugins: [
     vue(),
+    // 图标按需加载工具
+    Icons({}),
     Components({
       resolvers: [
-        AntDesignVueResolver({
-          importStyle: false // css in js
-        })
+        IconsResolver()
       ]
     })
   ],
