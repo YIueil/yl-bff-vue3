@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { Icon } from '@iconify/vue'
+const count = ref(1)
 </script>
 
 <template>
   <header>
+    <button @click="count++">增加</button>
+    {{ count }}
     <!-- 在线引入 -->
     <Icon icon="mdi:home" width="32" height="32" />
     <!-- 离线引入 按需引入 -->
