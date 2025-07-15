@@ -51,3 +51,8 @@ import { Icon } from '@iconify/vue'
 import { Icon } from '@iconify/vue'
 <Icon icon="mdi:home" width="24" height="24" /> 
 ```
+
+### 2.2 unplugin 相关插件
+通过 unplugin 插件实现 vue 的声明自动导入。
+- iconify图标自动导入。
+- vue、vue-router相关API自动声明导入。
