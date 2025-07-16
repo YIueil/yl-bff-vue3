@@ -59,3 +59,6 @@ import { Icon } from '@iconify/vue'
 
 ### 2.3 元素拖拽功能
 集成 [vue-draggable-plus](https://vue-draggable-plus.pages.dev) 实现元素拖拽。
+
+### 2.4 模态框组件
+定制的模态框组件[YlModal.vue](src/components/YlModal.vue)。
