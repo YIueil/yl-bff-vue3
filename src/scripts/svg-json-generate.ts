@@ -92,6 +92,7 @@ multiIconSet.forEachSync((name, type) => {
 
 // Export
 console.log(multiIconSet.export())
+console.log(singleIconSet.export())
 
 fs.writeFileSync(config.outputSingleJsonFile, JSON.stringify(singleIconSet.export()))
 fs.writeFileSync(config.outputMultiJsonFile, JSON.stringify(multiIconSet.export()))
