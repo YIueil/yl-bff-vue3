@@ -56,3 +56,6 @@ import { Icon } from '@iconify/vue'
 通过 unplugin 插件实现 vue 的声明自动导入。
 - iconify图标自动导入。
 - vue、vue-router相关API自动声明导入。
+
+### 2.3 元素拖拽功能
+集成 [vue-draggable-plus](https://vue-draggable-plus.pages.dev) 实现元素拖拽。

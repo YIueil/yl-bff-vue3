@@ -18,6 +18,11 @@ const router = createRouter({
       path: '/icon',
       name: 'icon',
       component: () => import('../views/IconView.vue')
+    },
+    {
+      path: '/drag',
+      name: 'drag',
+      component: () => import('../views/DraggableView.vue')
     }
   ]
 })

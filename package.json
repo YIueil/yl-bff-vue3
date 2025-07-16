@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.13.0",
+  "packageManager": "pnpm@10.13.1",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -19,6 +19,7 @@
     "ant-design-vue": "4.x",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
+    "vue-draggable-plus": "^0.6.0",
     "vue-router": "^4.3.3"
   },
   "devDependencies": {
