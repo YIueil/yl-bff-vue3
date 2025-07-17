@@ -23,6 +23,11 @@ const router = createRouter({
       path: '/drag',
       name: 'drag',
       component: () => import('../views/DraggableView.vue')
+    },
+    {
+      path: '/modal',
+      name: 'modal',
+      component: () => import('../views/ModalView.vue')
     }
   ]
 })

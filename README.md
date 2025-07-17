@@ -54,11 +54,15 @@ import { Icon } from '@iconify/vue'
 
 ### 2.2 unplugin 相关插件
 通过 unplugin 插件实现 vue 的声明自动导入。
-- iconify图标自动导入。
-- vue、vue-router相关API自动声明导入。
+- [x] iconify图标自动导入。
+- [x] vue、vue-router相关API自动声明导入。
 
 ### 2.3 元素拖拽功能
 集成 [vue-draggable-plus](https://vue-draggable-plus.pages.dev) 实现元素拖拽。
 
 ### 2.4 模态框组件
 定制的模态框组件[YlModal.vue](src/components/YlModal.vue)。
+- [ ] 拖拽
+- [ ] 缩放
+- [ ] 最大最小化
+- [ ] API创建模态框
