@@ -7,7 +7,7 @@ const showModal = ref(false)
   <button @click="showModal = true">弹出Modal</button>
   <YlModal :show="showModal" @close="showModal = false">
     <template v-slot:header>
-      <h3>弹出框标题</h3>
+      弹出框标题
     </template>
     <template v-slot:body>
       this is modal body!

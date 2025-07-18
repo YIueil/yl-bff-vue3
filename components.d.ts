@@ -7,21 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AButton: typeof import('ant-design-vue/es')['Button']
-    ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
-    ACheckboxGroup: typeof import('ant-design-vue/es')['CheckboxGroup']
-    AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
-    ADatePicker: typeof import('ant-design-vue/es')['DatePicker']
-    AForm: typeof import('ant-design-vue/es')['Form']
-    AFormItem: typeof import('ant-design-vue/es')['FormItem']
-    AInput: typeof import('ant-design-vue/es')['Input']
-    ARadio: typeof import('ant-design-vue/es')['Radio']
-    ARadioGroup: typeof import('ant-design-vue/es')['RadioGroup']
-    ASelect: typeof import('ant-design-vue/es')['Select']
-    ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
-    ASpace: typeof import('ant-design-vue/es')['Space']
-    ASwitch: typeof import('ant-design-vue/es')['Switch']
-    ATextarea: typeof import('ant-design-vue/es')['Textarea']
     IMaterialSymbols1xMobiledataBadgeRounded: typeof import('~icons/material-symbols/1x-mobiledata-badge-rounded')['default']
     IMdiHome: typeof import('~icons/mdi/home')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
