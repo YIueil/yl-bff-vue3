@@ -1,26 +1,12 @@
-<script lang="ts">
-import { defineComponent } from 'vue'
-import Vue3DraggableResizable from 'vue3-draggable-resizable'
-//default styles
-import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
-
-export default defineComponent({
-  components: { Vue3DraggableResizable },
-  data() {
-    return {
-      x: 100,
-      y: 100,
-      h: 100,
-      w: 100,
-      active: false
-    }
-  },
-  methods: {
-    print(val: any) {
-      console.log(val)
-    }
-  }
-})
+<script setup lang="ts">
+const x = ref(100)
+const y = ref(100)
+const h = ref(100)
+const w = ref(100)
+const active = ref(false)
+const print = function(val: string) {
+  console.log(val)
+}
 </script>
 
 <template>
