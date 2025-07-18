@@ -25,6 +25,11 @@ const router = createRouter({
       component: () => import('../views/DraggableView.vue')
     },
     {
+      path: '/drag-resize',
+      name: 'drag-resize',
+      component: () => import('../views/DragResizeView.vue')
+    },
+    {
       path: '/modal',
       name: 'modal',
       component: () => import('../views/ModalView.vue')

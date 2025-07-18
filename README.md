@@ -58,7 +58,9 @@ import { Icon } from '@iconify/vue'
 - [x] vue、vue-router相关API自动声明导入。
 
 ### 2.3 元素拖拽功能
-集成 [vue-draggable-plus](https://vue-draggable-plus.pages.dev) 实现元素拖拽。
+集成 [vue-draggable-plus](https://vue-draggable-plus.pages.dev) 实现列表元素拖拽排序。
+
+使用 [vue-draggable-resizable](https://vue-draggable-plus.pages.dev/) 实现单个元素的拖拽和元素大小缩放。
 
 ### 2.4 模态框组件
 定制的模态框组件[YlModal.vue](src/components/YlModal.vue)。
