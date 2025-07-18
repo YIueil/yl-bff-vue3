@@ -60,7 +60,7 @@ import { Icon } from '@iconify/vue'
 ### 2.3 元素拖拽功能
 集成 [vue-draggable-plus](https://vue-draggable-plus.pages.dev) 实现列表元素拖拽排序。
 
-使用 [vue-draggable-resizable](https://vue-draggable-plus.pages.dev/) 实现单个元素的拖拽和元素大小缩放。
+使用 [vue3-draggable-resizable](https://github.com/a7650/vue3-draggable-resizable/blob/main/docs/document_zh.md) 实现单个元素的拖拽和元素大小缩放。
 
 ### 2.4 模态框组件
 定制的模态框组件[YlModal.vue](src/components/YlModal.vue)。
