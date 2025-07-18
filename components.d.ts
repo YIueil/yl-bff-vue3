@@ -26,7 +26,7 @@ declare module 'vue' {
     IMdiHome: typeof import('~icons/mdi/home')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    YlModal: typeof import('./src/components/YlModal.vue')['default']
     Vue3DraggableResizable: typeof import('vue3-draggable-resizable')['default']
+    YlModal: typeof import('./src/components/YlModal.vue')['default']
   }
 }
