@@ -231,6 +231,10 @@ const onMaskClick = function () {
   background: #fff;
 }
 
+:deep(.custom-handle-br) {
+  z-index: 9999;
+}
+
 .header-title {
   overflow: hidden;
   white-space: nowrap;
