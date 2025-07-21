@@ -73,3 +73,6 @@ import { Icon } from '@iconify/vue'
 
 ### 3 VueUse 引入使用
 VueUse是基于CompositionAPI的一套实用函数集合。
+
+### 4 base.css 通用样式
+- [x] 现代化的滚动条

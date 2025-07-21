@@ -1,0 +1,31 @@
+/*region 现代化的滚动条*/
+/* 整个滚动条区域 */
+::-webkit-scrollbar {
+    width: 12px;  /* 垂直滚动条宽度 */
+    height: 12px; /* 水平滚动条高度 */
+}
+
+/* 滚动条轨道 */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background-clip: content-box;
+}
+
+/* 滑块悬停状态 */
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 滚动条角落 */
+::-webkit-scrollbar-corner {
+    background: #f1f1f1;
+}
+/*endregion*/
