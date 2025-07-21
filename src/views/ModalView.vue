@@ -1,30 +1,88 @@
 <script setup lang="ts">
-
+import { Modal } from '@/utils/modal-manager'
+import AboutView from '@/views/AboutView.vue'
+import { type ModalInstance, ModalManagerInterface } from '@/types/components/modal'
+import ModalViewOptions from '@/views/ModalViewOptions.vue'
 const showModal = ref(false)
 const modelKey = ref(0)
+
+// 通过全局定义调用
+const modal = inject<ModalManagerInterface>('modal')
+
+let instance: ModalInstance | null = null
+
+const closeAll = function () {
+  instance?.closeAll()
+}
+
+const openModalByFunction = function () {
+  let modalInstance: ModalInstance | null = null
+  modalInstance = Modal.open({
+    key: '第一个API窗体',
+    title: '第一个API窗体',
+    body: AboutView,
+    componentProps: {
+      userName: '第一个API窗体'
+    },
+    showMask: true,
+    showHeader: true,
+    onClose: () => modalInstance?.close()
+  })
+  instance = modalInstance
+}
+
+const openModalByFunction2 = function () {
+  let modalInstance: ModalInstance | null = null
+  modalInstance = Modal.open({
+    key: '第二个API窗体',
+    title: '第二个API窗体',
+    body: () => h(`<div style="background: green">第二个API窗体</div>`),
+    onClose: () => modalInstance?.close()
+  })
+}
+
+const openModalByFunction3 = function () {
+  let modalInstance: ModalInstance | null = null
+  modalInstance = Modal.open({
+    key: '第三个API窗体',
+    title: '第三个API窗体',
+    body: `<div style="background: green">第三个API窗体</div>`,
+    onClose: () => modalInstance?.close()
+  })
+}
+
+const openModalByFunction4 = function () {
+  let modalInstance: ModalInstance
+  modalInstance = modal?.open({
+    key: '第四个API窗体',
+    title: '第四个API窗体',
+    body: AboutView,
+    componentProps: {
+      userName: '第四个API窗体'
+    },
+    showMask: true,
+    showHeader: true,
+    onClose: () => modalInstance?.close()
+  }) as ModalInstance
+}
 </script>
 
 <template>
   <button @click="showModal = true">弹出Modal</button>
+  <button @click="openModalByFunction">API弹出Modal1</button>
+  <button @click="openModalByFunction2">API弹出Modal2</button>
+  <button @click="openModalByFunction3">API弹出Modal3</button>
+  <button @click="openModalByFunction4">API弹出Modal4</button>
+  <button @click="closeAll">关闭所有</button>
   <YlModal :key="modelKey" :show="showModal" :show-mask="true" @close="showModal = false; modelKey++;">
     <template v-slot:header>
       弹出框标题很长很长很长很长很长很长很长很长很长很长很长很长很长很长
     </template>
     <template v-slot:body>
-      this is modal body! 对我个人而言，随机一段废话不仅仅是一个重大的事件，还可能会改变我的人生. 随机一段废话似乎是一种巧合，但如果我们从一个更大的角度看待问题，这似乎是一种不可避免的事实. 要想清楚, 随机一段废话, 到底是一种怎么样的存在. 这样看来, 一般来说, 我认为, 随机一段废话, 发生了会如何, 不发生又会如何.
-      而这些并不是完全重要, 更加重要的问题是, 就我个人来说, 随机一段废话对我的意义,
-      对我个人而言，随机一段废话不仅仅是一个重大的事件，还可能会改变我的人生. 随机一段废话似乎是一种巧合，但如果我们从一个更大的角度看待问题，这似乎是一种不可避免的事实. 要想清楚, 随机一段废话, 到底是一种怎么样的存在. 这样看来, 一般来说, 我认为, 随机一段废话, 发生了会如何, 不发生又会如何.
-      而这些并不是完全重要, 更加重要的问题是, 就我个人来说, 随机一段废话对我的意义,
-      对我个人而言，随机一段废话不仅仅是一个重大的事件，还可能会改变我的人生. 随机一段废话似乎是一种巧合，但如果我们从一个更大的角度看待问题，这似乎是一种不可避免的事实. 要想清楚, 随机一段废话, 到底是一种怎么样的存在. 这样看来, 一般来说, 我认为, 随机一段废话, 发生了会如何, 不发生又会如何.
-      而这些并不是完全重要, 更加重要的问题是, 就我个人来说, 随机一段废话对我的意义,
-      对我个人而言，随机一段废话不仅仅是一个重大的事件，还可能会改变我的人生. 随机一段废话似乎是一种巧合，但如果我们从一个更大的角度看待问题，这似乎是一种不可避免的事实. 要想清楚, 随机一段废话, 到底是一种怎么样的存在. 这样看来, 一般来说, 我认为, 随机一段废话, 发生了会如何, 不发生又会如何.
-      而这些并不是完全重要, 更加重要的问题是, 就我个人来说, 随机一段废话对我的意义,
-      对我个人而言，随机一段废话不仅仅是一个重大的事件，还可能会改变我的人生. 随机一段废话似乎是一种巧合，但如果我们从一个更大的角度看待问题，这似乎是一种不可避免的事实. 要想清楚, 随机一段废话, 到底是一种怎么样的存在. 这样看来, 一般来说, 我认为, 随机一段废话, 发生了会如何, 不发生又会如何.
-      而这些并不是完全重要, 更加重要的问题是, 就我个人来说, 随机一段废话对我的意义,
-      对我个人而言，随机一段废话不仅仅是一个重大的事件，还可能会改变我的人生. 随机一段废话似乎是一种巧合，但如果我们从一个更大的角度看待问题，这似乎是一种不可避免的事实. 要想清楚, 随机一段废话, 到底是一种怎么样的存在. 这样看来, 一般来说, 我认为, 随机一段废话, 发生了会如何, 不发生又会如何.
-      而这些并不是完全重要, 更加重要的问题是, 就我个人来说, 随机一段废话对我的意义,
+      <AboutView />
     </template>
   </YlModal>
+  <ModalViewOptions />
 </template>
 
 <style scoped>

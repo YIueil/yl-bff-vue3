@@ -67,9 +67,14 @@ import { Icon } from '@iconify/vue'
 - [x] 拖拽
 - [x] 缩放
 - [x] 最大最小化
-- [ ] API创建模态框
+- [x] API创建模态框
+- [ ] 新增按钮组参数，支持按钮名称和事件名称
 - [ ] 移动端优化
 - [ ] 模态框列表
+
+TODO
+- [ ] 学习`h()`渲染函数
+- [ ] 了解什么时候使用`type`什么时候使用`class`
 
 ### 3 VueUse 引入使用
 VueUse是基于CompositionAPI的一套实用函数集合。
