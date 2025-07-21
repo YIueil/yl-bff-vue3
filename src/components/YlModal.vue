@@ -224,15 +224,34 @@ const onMaskClick = function () {
   align-items: center;
   justify-content: space-between;
   height: 36px;
-  padding: 8px 10px;
+  padding: 8px 12px;
   border-bottom: 1px solid #e8e8e8;
   cursor: move;
   user-select: none;
-  background: #fff;
 }
 
 :deep(.custom-handle-br) {
   z-index: 9999;
+}
+
+:deep(.vdr-handle) {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M22 22h-2v-2h2zm0-4h-2v-2h2zm-4 4h-2v-2h2zm0-4h-2v-2h2zm-4 4h-2v-2h2zm8-8h-2v-2h2z'/%3E%3C/svg%3E");
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg);
+  mask-image: var(--svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+:deep(.vdr-handle-br) {
+  bottom: 0px;
+  right: 0px;
+  cursor: se-resize;
 }
 
 .header-title {
@@ -271,7 +290,7 @@ const onMaskClick = function () {
   align-items: center;
   justify-content: flex-end;
   height: 36px;
-  padding: 8px 10px;
+  padding: 8px 12px;
   border-top: 1px solid #e8e8e8;
 }
 
