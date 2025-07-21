@@ -16,6 +16,7 @@
   "dependencies": {
     "@iconify/json": "^2.2.357",
     "@iconify/tools": "^4.1.2",
+    "@vueuse/core": "^13.5.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
     "vue-draggable-plus": "^0.6.0",

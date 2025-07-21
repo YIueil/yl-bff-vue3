@@ -64,7 +64,12 @@ import { Icon } from '@iconify/vue'
 
 ### 2.4 模态框组件
 定制的模态框组件[YlModal.vue](src/components/YlModal.vue)。
-- [ ] 拖拽
-- [ ] 缩放
-- [ ] 最大最小化
+- [x] 拖拽
+- [x] 缩放
+- [x] 最大最小化
 - [ ] API创建模态框
+- [ ] 移动端优化
+- [ ] 模态框列表
+
+### 3 VueUse 引入使用
+VueUse是基于CompositionAPI的一套实用函数集合。

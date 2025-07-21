@@ -1,7 +1,8 @@
 <template>
   <Teleport to="body" :disabled="!isTeleport">
     <Transition name="modal">
-      <div v-if="show" class="modal-mask">
+      <div v-if="show" :class="['modal-wrapper', { 'with-mask': localShowMask }]">
+        <div v-if="localShowMask" class="modal-mask" @click.self="onMaskClick"></div>
         <Vue3DraggableResizable
           :parent="parent"
           :initW="initW"
@@ -11,8 +12,15 @@
           v-model:w="w"
           v-model:h="h"
           :active="active"
-          :draggable="true"
-          :resizable="true"
+          :draggable="localDraggable"
+          :resizable="localResizable"
+          :handles="['br']"
+          classNameDraggable="custom-draggable"
+          classNameResizable="custom-resizable"
+          classNameDragging="custom-dragging"
+          classNameResizing="custom-resizing"
+          classNameActive="custom-active"
+          classNameHandle="custom-handle"
           @activated="print('activated')"
           @deactivated="print('deactivated')"
           @drag-start="print('drag-start')"
@@ -23,17 +31,25 @@
           @resize-end="print('resize-end')"
         >
           <div class="modal-container">
-            <div class="modal-header">
-              <slot name="header">default header</slot>
+            <div v-if="showHeader" class="modal-header">
+              <div class="header-title">
+                <slot name="header">[请定义标题]</slot>
+              </div>
+              <div class="header-btns" @mousedown.stop>
+                <IMdiMinus v-if="!minimize" @click="windowMinimize" />
+                <IMdiResize v-if="minimize" @click="windowResize" />
+                <IMdiWindowMaximize v-if="!maximize && !minimize" @click="windowMaximize" />
+                <IMdiWindowRestore v-else-if="maximize && !minimize" @click="windowMaximize" />
+                <IMdiClose @click="$emit('close')" />
+              </div>
             </div>
 
-            <div class="modal-body">
-              <slot name="body">default body</slot>
+            <div v-if="localShowBody" class="modal-body" @mousedown.stop>
+              <slot name="body">[请定义内容]</slot>
             </div>
 
-            <div class="modal-footer">
+            <div v-if="localShowFooter" class="modal-footer" @mousedown.stop>
               <slot name="footer">
-                default footer
                 <button class="modal-default-button" @click="$emit('close')">OK</button>
               </slot>
             </div>
@@ -45,31 +61,136 @@
 </template>
 
 <script setup lang="ts">
-defineEmits(['close'])
-defineProps({
+import { useWindowSize } from '@vueuse/core'
+
+const emits = defineEmits(['close'])
+const props = defineProps({
   show: Boolean,
+  showMask: {
+    type: Boolean,
+    default: true
+  },
+  showHeader: {
+    type: Boolean,
+    default: true
+  },
+  showBody: {
+    type: Boolean,
+    default: true
+  },
+  showFooter: {
+    type: Boolean,
+    default: true
+  },
+  clickMaskClose: {
+    type: Boolean,
+    default: true
+  },
   isTeleport: {
     type: Boolean,
     default: true
   },
   parent: {
     type: Boolean,
-    default: false
+    default: true
+  },
+  resizable: {
+    type: Boolean,
+    default: true
+  },
+  draggable: {
+    type: Boolean,
+    default: true
   }
 })
-const x = ref(100)
-const y = ref(100)
-const h = ref(100)
-const w = ref(100)
-const initW = ref(500)
-const initH = ref(300)
+const x = ref(0)
+const y = ref(0)
+const h = ref(0)
+const w = ref(0)
+const initW = ref(900)
+const initH = ref(560)
 const active = ref(false)
-const print = function(val: string) {
+const minimize = ref(false)
+const maximize = ref(false)
+const localShowMask = ref(props.showMask)
+const localShowBody = ref(props.showBody)
+const localShowFooter = ref(props.showFooter)
+const localResizable = ref(props.resizable)
+const localDraggable = ref(props.draggable)
+
+const print = function (val: string) {
   console.log(val)
+}
+
+const windowMinimize = function () {
+  const { height } = useWindowSize()
+  minimize.value = true
+  localResizable.value = false
+  localShowBody.value = false
+  localShowFooter.value = false
+  localShowMask.value = false
+  // 宽高保留头部范围 移动到左下角
+  h.value = 36
+  w.value = 200
+  x.value = 0
+  y.value = height.value - 36
+}
+
+const windowResize = function () {
+  const { width, height } = useWindowSize()
+  minimize.value = false
+  localResizable.value = props.resizable
+  localShowBody.value = props.showBody
+  localShowFooter.value = props.showFooter
+  localShowMask.value = props.showMask
+  h.value = initH.value
+  w.value = initW.value
+  x.value = (width.value - initW.value) / 2
+  y.value = (height.value - initH.value) / 2
+}
+
+const windowMaximize = function () {
+  const { width, height } = useWindowSize()
+  if (maximize.value) {
+    h.value = initH.value
+    w.value = initW.value
+    x.value = (width.value - initW.value) / 2
+    y.value = (height.value - initH.value) / 2
+  } else {
+    h.value = height.value
+    w.value = width.value
+    x.value = 0
+    y.value = 0
+  }
+  maximize.value = !maximize.value
+}
+
+const onMaskClick = function () {
+  if (props.clickMaskClose) {
+    if (props.clickMaskClose) {
+      emits('close')
+    }
+  }
 }
 </script>
 
 <style scoped>
+.modal-wrapper {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* 允许点击穿透 */
+  pointer-events: none;
+}
+
+.with-mask {
+  /* 有遮罩时启用点击事件 */
+  pointer-events: auto;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -84,28 +205,70 @@ const print = function(val: string) {
 
 .modal-container {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
+  border-radius: 4px;
   margin: auto;
   background-color: #fff;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* 容器内元素可正常交互 */
+  pointer-events: auto;
+  z-index: 9999;
 }
 
 .modal-header {
-  position: absolute;
-  top: 0;
-  color: #42b983;
-  border-bottom: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e8e8e8;
+  cursor: move;
+  user-select: none;
+  background: #fff;
+}
+
+.header-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.header-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 80px;
+}
+
+.header-btns > * {
+  padding: 0 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 可选：添加悬停时的视觉反馈 */
+.header-btns > *:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
 }
 
 .modal-body {
-  margin: 20px 0;
+  flex: 1;
+  padding: 5px;
+  overflow-y: auto;
 }
 
 .modal-footer {
-  position: absolute;
-  bottom: 0;
-  border-top: 1px solid #999;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 36px;
+  padding: 8px 10px;
+  border-top: 1px solid #e8e8e8;
 }
 
 .modal-default-button {

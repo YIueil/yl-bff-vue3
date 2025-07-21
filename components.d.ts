@@ -7,8 +7,15 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    IMaterialSymbols1xMobiledataBadgeRounded: typeof import('~icons/material-symbols/1x-mobiledata-badge-rounded')['default']
+    IMaterialSymbolsClose: typeof import('~icons/material-symbols/close')['default']
+    IMdiC: typeof import('~icons/mdi/c')['default']
+    IMdiClose: typeof import('~icons/mdi/close')['default']
     IMdiHome: typeof import('~icons/mdi/home')['default']
+    IMdiMaximize: typeof import('~icons/mdi/maximize')['default']
+    IMdiMinus: typeof import('~icons/mdi/minus')['default']
+    IMdiResize: typeof import('~icons/mdi/resize')['default']
+    IMdiWindowMaximize: typeof import('~icons/mdi/window-maximize')['default']
+    IMdiWindowRestore: typeof import('~icons/mdi/window-restore')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Vue3DraggableResizable: typeof import('vue3-draggable-resizable')['default']
