@@ -118,6 +118,12 @@ const localShowFooter = ref(props.showFooter)
 const localResizable = ref(props.resizable)
 const localDraggable = ref(props.draggable)
 
+onMounted(() => {
+  const { width, height } = useWindowSize()
+  x.value = (width.value - initW.value) / 2
+  y.value = (height.value - initH.value) / 2
+})
+
 const print = function (val: string) {
   console.log(val)
 }

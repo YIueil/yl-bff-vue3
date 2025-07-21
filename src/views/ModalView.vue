@@ -1,11 +1,12 @@
 <script setup lang="ts">
 
 const showModal = ref(false)
+const modelKey = ref(0)
 </script>
 
 <template>
   <button @click="showModal = true">弹出Modal</button>
-  <YlModal :show="showModal" :show-mask="true" @close="showModal = false">
+  <YlModal :key="modelKey" :show="showModal" :show-mask="true" @close="showModal = false; modelKey++;">
     <template v-slot:header>
       弹出框标题很长很长很长很长很长很长很长很长很长很长很长很长很长很长
     </template>
