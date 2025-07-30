@@ -1,12 +1,11 @@
-import { createApp, h } from 'vue'
-import type { App, Component } from 'vue'
+import type { App } from 'vue'
+import { createApp, h, isVNode } from 'vue'
 import YlModal from '@/components/YlModal.vue'
-import type { ModalInstance, ModalOptions, ModalManagerInterface } from '@/types/components/modal'
+import type { ModalInstance, ModalManagerInterface, ModalOptions } from '@/types/components/modal'
 // 第三方拖拽组件
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 //default styles
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
-
 
 export class ModalManager implements ModalManagerInterface {
   private static instance: ModalManager
@@ -22,40 +21,56 @@ export class ModalManager implements ModalManagerInterface {
 
   public open<T = any>(options: ModalOptions<T>): ModalInstance {
     let { key } = options
-    if (!key) {
-      key = Math.random()
-    }
+    const { title, body, footer } = options
+
     // 统一挂载到名为 modal-div 这个类名的 div 下
     let mountNode = document.getElementsByClassName('modal-div')[0]
     if (!mountNode) {
       mountNode = document.createElement('div')
       document.body.appendChild(mountNode)
     }
+    if (!key) {
+      key = Math.random()
+    }
 
-    // 渲染内容函数
-    const renderBody = () => {
-      // 为空时返回 null
-      if (!options.body) {
+    // 渲染函数
+    const renderHeader = (): VNode | null => {
+      if (!title) {
         return null
       }
+      if (typeof title === 'string') {
+        return h('div', {
+          innerHTML: title
+        })
+      }
+      return h(title)
+    }
+    const renderBody = (): VNode => {
+      console.log(body, typeof body)
+      // 为渲染一个空 div 节点
+      if (!body) {
+        return h('div')
+      }
 
-      // 处理渲染函数
-      if (typeof options.body === 'function') {
-        try {
-          // 尝试作为渲染函数执行 TODO 学习 h() 函数后再完善
-          const result = options.body();
-          if (result && (result as any).__v_isVNode) {
-            return result as VNode;
-          }
-          // 如果是组件构造函数，继续下面的处理
-        } catch {
-          // 如果执行出错，说明是组件构造函数
-        }
+      if (isVNode(body)) {
+        return body
+      }
+
+      if (typeof body === 'string') {
+        // 使用 h() 函数进行渲染
+        return h('div', {
+          innerHTML: body
+        })
+      }
+
+      // 处理 h() 渲染函数
+      if (typeof body === 'function') {
+        return (body as Function)()
       }
 
       // 如果是组件
-      if (typeof options.body === 'object') {
-        return h(options.body, {
+      if (typeof body === 'object') {
+        return h(body, {
           ...options.componentProps,
           onClose: () => this.close(key),
           onCloseAll: () => this.closeAll(),
@@ -64,9 +79,17 @@ export class ModalManager implements ModalManagerInterface {
           }
         })
       }
-      console.error('渲染body失败', options.body)
+      return h('div')
     }
-
+    const renderFooter = (): VNode | null => {
+      if (!footer) {
+        return null
+      }
+      return h(footer)
+    }
+    const renderHeaderVNode = renderHeader()
+    const renderBodyVNode = renderBody()
+    const renderFooterVNode = renderFooter()
     const modalApp = createApp({
       render() {
         return h(
@@ -88,9 +111,9 @@ export class ModalManager implements ModalManagerInterface {
             }
           },
           {
-            header: options.title ? typeof options.title === 'function' ? options.title : () => options.title as string : undefined,
-            body: renderBody,
-            footer: options.footer ? typeof options.footer === 'function' ? options.footer : () => h(options.footer as Component) : undefined
+            header: () => renderHeaderVNode,
+            body: () => renderBodyVNode,
+            footer: () => renderFooterVNode
           }
         )
       },
@@ -141,4 +164,3 @@ export const ModalPlugin = {
 
 // 支持局部注册导入使用
 export const Modal = modalManagerInstance
-

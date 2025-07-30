@@ -26,7 +26,10 @@ const openModalByFunction = function () {
     },
     showMask: true,
     showHeader: true,
-    onClose: () => modalInstance?.close()
+    onClose: () => modalInstance?.close(),
+    onComponentEvent: (event, payload) => {
+      console.log(event, payload)
+    }
   })
   instance = modalInstance
 }
@@ -60,7 +63,6 @@ const openModalByFunction4 = function () {
   let modalInstance: ModalInstance
   modalInstance = modal?.open({
     key: '第四个API窗体',
-    title: '第四个API窗体',
     body: AboutView,
     componentProps: {
       userName: '第四个API窗体'

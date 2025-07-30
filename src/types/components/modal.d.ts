@@ -1,4 +1,4 @@
-import { type Component, type DefineComponent, type VNode } from 'vue'
+import { type Component, type VNode } from 'vue'
 
 export interface ModalInstance {
   close: () => void,
@@ -16,7 +16,7 @@ export class ModalManagerInterface {
 
 export type ModalOptions<T = any> = {
   // 唯一标识
-  key?: string | number | null
+  key?: string | number
   // 基础配置
   showMask?: boolean
   showHeader?: boolean
