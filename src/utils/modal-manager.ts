@@ -28,6 +28,7 @@ export class ModalManager implements ModalManagerInterface {
   }
 
   public open<T = any>(options: ModalOptions<T>): ModalInstance {
+    // ModalInstance 对象
     let { key } = options
     const { title, component, footer, on: onEvent } = options
 
@@ -78,7 +79,8 @@ export class ModalManager implements ModalManagerInterface {
       // 如果是组件
       if (typeof component === 'object') {
         return h(component, {
-          ...options.componentProps
+          ...options.componentProps,
+          ref: 'contentComponent'
         })
       }
       return h('div')
@@ -107,15 +109,16 @@ export class ModalManager implements ModalManagerInterface {
       }
       return h(footer)
     }
-    const renderHeaderVNode = renderHeader()
-    const renderBodyVNode = renderBody()
-    const renderFooterVNode = renderFooter()
+
     const modalApp = createApp({
       setup() {
         const currentInstance = getCurrentInstance()
+        const contentComponent = ref(null)
         // 返回值会暴露给模板和其他的选项式 API 钩子
         return {
+          // 这里如果增加东西, 最好扩展到 ModalInstance 这个接口中
           currentInstance,
+          contentComponent
         }
       },
       render() {
@@ -135,9 +138,9 @@ export class ModalManager implements ModalManagerInterface {
             onEvent: (eventName) => this.onEvent(eventName)
           },
           {
-            header: () => renderHeaderVNode,
-            body: () => renderBodyVNode,
-            footer: () => renderFooterVNode
+            header: () => renderHeader(),
+            body: () => renderBody(),
+            footer: () => renderFooter()
           }
         )
       },
@@ -174,9 +177,9 @@ export class ModalManager implements ModalManagerInterface {
       console.warn(`未知的窗口key: ${key}`)
       return
     }
-    const { app, modalContext } = modalEntry
+    const { modalContext } = modalEntry
     // 触发事件
-    console.log('onEvent', eventName, modalContext)
+    // console.log('onEvent', eventName, modalContext)
     const callback = onEvent?.[eventName]
     if (callback) {
       callback(modalContext)

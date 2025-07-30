@@ -1,9 +1,11 @@
 import { type Component, type VNode } from 'vue'
 
-export interface ModalInstance {
+export interface ModalInstance extends Record<string, unknown> {
   getKey: () => string | number
   close: () => void,
-  closeAll: () => void
+  closeAll: () => void,
+  contentComponent?: ComponentPublicInstance
+  currentInstance?: ComponentPublicInstance
 }
 
 export type EventHandler = (ctl: any) => void

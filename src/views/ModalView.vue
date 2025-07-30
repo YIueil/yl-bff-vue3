@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Modal } from '@/utils/modal-manager'
 import AboutView from '@/views/AboutView.vue'
-import { ModalManagerInterface } from '@/types/components/modal'
+import { type ModalInstance, ModalManagerInterface } from '@/types/components/modal'
 import ModalViewOptions from '@/views/ModalViewOptions.vue'
 const showModal = ref(false)
 const modelKey = ref(0)
@@ -32,19 +32,22 @@ const openModalByFunction = function () {
     }, {
       name: '获取key',
       eventName: 'getKey'
+    }, {
+      name: '打印当前count',
+      eventName: 'print'
     }],
     on: {
-      send: function (ctl: any) {
+      send: function (ctl: ModalInstance) {
         console.log('send发送, 可能需要拿到ctl做一些操作, 比如拿到ctl中的data中的属性', ctl)
       },
-      close: function (ctl: any) {
+      close: function (ctl: ModalInstance) {
         ctl.close()
       },
-      getKey: function (ctl: any) {
+      getKey: function (ctl: ModalInstance) {
         console.log(ctl.getKey())
       },
-      btnClick: function (ctl: any) {
-        debugger
+      print: (ctl) => {
+        console.log(ctl.contentComponent.getCount())
       }
     }
   })
