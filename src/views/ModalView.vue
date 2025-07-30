@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Modal } from '@/utils/modal-manager'
-import AboutView from '@/views/AboutView.vue'
+import AboutView, { type AboutViewExpose } from '@/views/AboutView.vue'
 import { type ModalInstance, ModalManagerInterface } from '@/types/components/modal'
 import ModalViewOptions from '@/views/ModalViewOptions.vue'
 const showModal = ref(false)
@@ -35,6 +35,9 @@ const openModalByFunction = function () {
     }, {
       name: '打印当前count',
       eventName: 'print'
+    }, {
+      name: '增加count',
+      eventName: 'increment'
     }],
     on: {
       send: function (ctl: ModalInstance) {
@@ -45,9 +48,15 @@ const openModalByFunction = function () {
       },
       getKey: function (ctl: ModalInstance) {
         console.log(ctl.getKey())
+        // 默认情况下随便调用方法也不会报错, 但是不推荐, 容易出错
+        console.log(ctl.contentComponent?.func())
       },
-      print: (ctl) => {
-        console.log(ctl.contentComponent.getCount())
+      print: (ctl: ModalInstance<AboutViewExpose>) => {
+        console.log(ctl.contentComponent?.getCount())
+        console.log(ctl.contentComponent?.count)
+      },
+      increment: (ctl: ModalInstance<AboutViewExpose>) => {
+        ctl.contentComponent?.increment()
       }
     }
   })

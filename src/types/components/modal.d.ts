@@ -1,11 +1,12 @@
 import { type Component, type VNode } from 'vue'
+import type { ComponentWithUnknownProps } from '@/types'
 
-export interface ModalInstance extends Record<string, unknown> {
+export interface ModalInstance<T = ComponentWithUnknownProps> {
   getKey: () => string | number
   close: () => void,
   closeAll: () => void,
-  contentComponent?: ComponentPublicInstance
-  currentInstance?: ComponentPublicInstance
+  contentComponent?: ComponentPublicInstance & T,
+  currentInstance?: ComponentPublicInstance & T
 }
 
 export type EventHandler = (ctl: any) => void
