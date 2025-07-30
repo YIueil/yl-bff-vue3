@@ -1,7 +1,7 @@
 import type { App } from 'vue'
 import { createApp, h, isVNode } from 'vue'
 import YlModal from '@/components/YlModal.vue'
-import type { ModalInstance, ModalManagerInterface, ModalOptions } from '@/types/components/modal'
+import type { EventHandler, ModalInstance, ModalManagerInterface, ModalOptions } from '@/types/components/modal'
 // 第三方拖拽组件
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 //default styles
@@ -10,7 +10,17 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 export class ModalManager implements ModalManagerInterface {
   private static instance: ModalManager
   // Modal实例Map
-  private modalAppMap: Map<string | number, App> = new Map<string | number, App>()
+  private modalEntryMap: Map<
+    string | number,
+    {
+      // 应用实例
+      app: App
+      // modal实例
+      modalContext: ComponentPublicInstance
+      // 内部组件实例
+      componentPublicInstance: ComponentPublicInstance | null
+    }
+  > = new Map()
 
   public static getInstance(): ModalManager {
     if (!ModalManager.instance) {
@@ -21,7 +31,9 @@ export class ModalManager implements ModalManagerInterface {
 
   public open<T = any>(options: ModalOptions<T>): ModalInstance {
     let { key } = options
-    const { title, component, footer } = options
+    const { title, component, footer, on: onEvent } = options
+
+    let componentPublicInstance: ComponentPublicInstance | null = null
 
     // 统一挂载到名为 modal-div 这个类名的 div 下
     let mountNode = document.getElementsByClassName('modal-div')[0]
@@ -46,7 +58,6 @@ export class ModalManager implements ModalManagerInterface {
       return h(title)
     }
     const renderBody = (): VNode => {
-      console.log(component, typeof component)
       // 为渲染一个空 div 节点
       if (!component) {
         return h('div')
@@ -72,8 +83,11 @@ export class ModalManager implements ModalManagerInterface {
       if (typeof component === 'object') {
         return h(component, {
           ...options.componentProps,
-          onClose: () => this.close(key),
-          onCloseAll: () => this.closeAll()
+          ref: (instance: ComponentPublicInstance | null) => {
+            if (instance) {
+              componentPublicInstance = instance
+            }
+          }
         })
       }
       return h('div')
@@ -82,12 +96,51 @@ export class ModalManager implements ModalManagerInterface {
       if (!footer) {
         return null
       }
+      if (Array.isArray(footer)) {
+        return h(
+          'div',
+          {
+            className: 'modal-footer-container'
+          },
+          footer.map((btn) =>
+            h(
+              'button',
+              {
+                class: ['modal-btn', `modal-btn-${btn.type || 'default'}`],
+                onClick: () => this.onEvent(key, btn.eventName, onEvent)
+              },
+              btn.name
+            )
+          )
+        )
+      }
       return h(footer)
     }
     const renderHeaderVNode = renderHeader()
     const renderBodyVNode = renderBody()
     const renderFooterVNode = renderFooter()
     const modalApp = createApp({
+      setup() {
+        const currentInstance = getCurrentInstance()
+        // TODO 如果body是一个Vue3组件, 将这个组件也暴露到外部去
+        const bodyComponentRef = ref<ComponentPublicInstance | null>(null)
+        // 暴露组件实例给外部
+        const exposeObj = {
+          currentInstance,
+          getBodyComponent: () => bodyComponentRef.value
+        }
+
+        // 使用 expose 显式暴露
+        if (currentInstance) {
+          Object.assign(currentInstance.proxy as object, exposeObj)
+        }
+        // 返回值会暴露给模板和其他的选项式 API 钩子
+        return {
+          currentInstance,
+          bodyComponentRef,
+          exposeObj
+        }
+      },
       render() {
         return h(
           YlModal,
@@ -102,15 +155,7 @@ export class ModalManager implements ModalManagerInterface {
             parent: options.parent,
             resizable: options.resizable,
             draggable: options.draggable,
-            onEvent: (eventName: string) => {
-              const callback = options.on?.[eventName]
-              if (callback) {
-                // 关键: 将内容组件实例传递给回调 TODO 传入 Ctl
-                callback(null)
-              } else {
-                console.error('Model声明未实现的事件', eventName)
-              }
-            }
+            onEvent: (eventName) => this.onEvent(eventName)
           },
           {
             header: () => renderHeaderVNode,
@@ -120,32 +165,70 @@ export class ModalManager implements ModalManagerInterface {
         )
       },
       methods: {
-        close: () => {
-          console.log('销毁Modal的createApp上下文', modalApp)
-        }
+        getKey: () => key,
+        close: () => this.close(key),
+        closeAll: () => this.closeAll(),
+        onEvent: (eventName: string) => this.onEvent(key, eventName, onEvent)
       }
     })
     modalApp.use(Vue3DraggableResizable)
-    modalApp.mount(mountNode)
-    this.modalAppMap.set(key, modalApp)
+    const modalContext = modalApp.mount(mountNode)
+    this.modalEntryMap.set(key, {
+      app: modalApp,
+      componentPublicInstance: componentPublicInstance,
+      modalContext: modalContext
+    })
 
     return {
+      getKey: () => key,
       close: () => this.close(key),
       closeAll: () => this.closeAll()
     }
   }
 
-  public close(key: string | number): void {
-    const modalApp = this.modalAppMap.get(key)
-    if (modalApp) {
-      modalApp.unmount()
-      modalApp._container?.remove()
-      this.modalAppMap.delete(key)
+  public onEvent(
+    key: string | number,
+    eventName: string,
+    onEvent?: {
+      [p: string]: EventHandler
+    }
+  ) {
+    const modalEntry = this.modalEntryMap.get(key)
+    if (!modalEntry) {
+      console.warn(`未知的窗口key: ${key}`)
+      return
+    }
+    const { app, modalContext, componentPublicInstance } = modalEntry
+    // 触发事件
+    console.log('onEvent', eventName, modalContext)
+    const callback = onEvent?.[eventName]
+    if (callback) {
+      callback(modalContext)
+      return
+    } else {
+      // 提供一些默认的事件实现, 如关闭事件默认关闭窗口
+      switch (eventName) {
+        case 'close':
+          this.close(key)
+          break
+        default:
+          console.error(`Model声明未实现的事件${eventName}, key: ${key}`)
+      }
     }
   }
 
+  public close(key: string | number): void {
+    const modalEntry = this.modalEntryMap.get(key)
+    if (!modalEntry) return
+
+    const { app } = modalEntry
+    app.unmount()
+    app._container?.remove()
+    this.modalEntryMap.delete(key)
+  }
+
   public closeAll(): void {
-    for (const key of this.modalAppMap.keys()) {
+    for (const key of this.modalEntryMap.keys()) {
       this.close(key)
     }
   }

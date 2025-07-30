@@ -1,6 +1,7 @@
 import { type Component, type VNode } from 'vue'
 
 export interface ModalInstance {
+  getKey: () => string | number
   close: () => void,
   closeAll: () => void
 }
@@ -18,7 +19,9 @@ export class ModalManagerInterface {
 
 export type ButtonAndEvent = {
   name: string,
-  eventName: string
+  eventName: string,
+  icon: string,
+  type: 'primary' | 'danger' | 'default'
 }
 
 export type ModalOptions<T = any> = {
@@ -43,7 +46,7 @@ export type ModalOptions<T = any> = {
   componentProps?: T
 
   // 事件
-  on: {
+  on?: {
     [key: string]: EventHandler
   }
 }

@@ -40,7 +40,7 @@
                 <IMdiResize v-if="minimize" @click="windowResize" />
                 <IMdiWindowMaximize v-if="!maximize && !minimize" @click="windowMaximize" />
                 <IMdiWindowRestore v-else-if="maximize && !minimize" @click="windowMaximize" />
-                <IMdiClose @click="$emit('close')" />
+                <IMdiClose @click="$emit('event', 'close')" />
               </div>
             </div>
 
@@ -50,7 +50,8 @@
 
             <div v-if="localShowFooter" class="modal-footer" @mousedown.stop>
               <slot name="footer">
-                <button class="modal-default-button" @click="$emit('close')">OK</button>
+                <button class="modal-default-button" @click="$emit('ok')">OK</button>
+                <button class="modal-default-button" @click="$emit('cancel')">Cancel</button>
               </slot>
             </div>
           </div>
@@ -63,7 +64,7 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 
-const emits = defineEmits(['close'])
+const emits = defineEmits(['event', 'close', 'ok', 'cancel'])
 const props = defineProps({
   show: Boolean,
   showMask: {
