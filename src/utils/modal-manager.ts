@@ -17,8 +17,6 @@ export class ModalManager implements ModalManagerInterface {
       app: App
       // modal实例
       modalContext: ComponentPublicInstance
-      // 内部组件实例
-      componentPublicInstance: ComponentPublicInstance | null
     }
   > = new Map()
 
@@ -32,8 +30,6 @@ export class ModalManager implements ModalManagerInterface {
   public open<T = any>(options: ModalOptions<T>): ModalInstance {
     let { key } = options
     const { title, component, footer, on: onEvent } = options
-
-    let componentPublicInstance: ComponentPublicInstance | null = null
 
     // 统一挂载到名为 modal-div 这个类名的 div 下
     let mountNode = document.getElementsByClassName('modal-div')[0]
@@ -82,12 +78,7 @@ export class ModalManager implements ModalManagerInterface {
       // 如果是组件
       if (typeof component === 'object') {
         return h(component, {
-          ...options.componentProps,
-          ref: (instance: ComponentPublicInstance | null) => {
-            if (instance) {
-              componentPublicInstance = instance
-            }
-          }
+          ...options.componentProps
         })
       }
       return h('div')
@@ -122,23 +113,9 @@ export class ModalManager implements ModalManagerInterface {
     const modalApp = createApp({
       setup() {
         const currentInstance = getCurrentInstance()
-        // TODO 如果body是一个Vue3组件, 将这个组件也暴露到外部去
-        const bodyComponentRef = ref<ComponentPublicInstance | null>(null)
-        // 暴露组件实例给外部
-        const exposeObj = {
-          currentInstance,
-          getBodyComponent: () => bodyComponentRef.value
-        }
-
-        // 使用 expose 显式暴露
-        if (currentInstance) {
-          Object.assign(currentInstance.proxy as object, exposeObj)
-        }
         // 返回值会暴露给模板和其他的选项式 API 钩子
         return {
           currentInstance,
-          bodyComponentRef,
-          exposeObj
         }
       },
       render() {
@@ -175,7 +152,6 @@ export class ModalManager implements ModalManagerInterface {
     const modalContext = modalApp.mount(mountNode)
     this.modalEntryMap.set(key, {
       app: modalApp,
-      componentPublicInstance: componentPublicInstance,
       modalContext: modalContext
     })
 
@@ -198,7 +174,7 @@ export class ModalManager implements ModalManagerInterface {
       console.warn(`未知的窗口key: ${key}`)
       return
     }
-    const { app, modalContext, componentPublicInstance } = modalEntry
+    const { app, modalContext } = modalEntry
     // 触发事件
     console.log('onEvent', eventName, modalContext)
     const callback = onEvent?.[eventName]
