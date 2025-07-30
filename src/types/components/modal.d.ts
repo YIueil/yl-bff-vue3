@@ -29,7 +29,7 @@ export type ModalOptions<T = any> = {
 
   // 主体内容
   title?: string | VNode
-  body?: string | Component | DefineComponent | VNode | Function // 支持组件或渲染函数
+  body?: string | Component | (() => VNode) // 支持组件或渲染函数
   footer?: Component | VNode
 
   // 组件props

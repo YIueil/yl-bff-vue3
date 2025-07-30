@@ -36,7 +36,12 @@ const openModalByFunction2 = function () {
   modalInstance = Modal.open({
     key: '第二个API窗体',
     title: '第二个API窗体',
-    body: () => h(`<div style="background: green">第二个API窗体</div>`),
+    body: () => h(`div`, {
+      style: {
+        background: 'green'
+      },
+      innerHTML: '第二个API窗体, 通过h函数渲染'
+    }),
     onClose: () => modalInstance?.close()
   })
 }
@@ -46,7 +51,7 @@ const openModalByFunction3 = function () {
   modalInstance = Modal.open({
     key: '第三个API窗体',
     title: '第三个API窗体',
-    body: `<div style="background: green">第三个API窗体</div>`,
+    body: `<div style="background: green">第三个API窗体, 单纯的String</div>`,
     onClose: () => modalInstance?.close()
   })
 }
