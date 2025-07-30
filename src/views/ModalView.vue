@@ -20,15 +20,26 @@ const openModalByFunction = function () {
   modalInstance = Modal.open({
     key: '第一个API窗体',
     title: '第一个API窗体',
-    body: AboutView,
-    componentProps: {
-      userName: '第一个API窗体'
-    },
     showMask: true,
     showHeader: true,
-    onClose: () => modalInstance?.close(),
-    onComponentEvent: (event, payload) => {
-      console.log(event, payload)
+    component: AboutView,
+    componentProps: {
+      userName: '张三'
+    },
+    footer: [{
+      name: '确认',
+      eventName: 'ok'
+    }, {
+      name: '取消',
+      eventName: 'cancel'
+    }],
+    on: {
+      ok: function (ctl: any) {
+        console.log('确认, 可能需要拿到ctl做一些操作, 比如拿到ctl中的data中的属性', ctl)
+      },
+      cancel: function (ctl: any) {
+        console.log('取消, 可能需要拿到ctl做一些操作, 比如拿到ctl中的data中的属性', ctl)
+      }
     }
   })
   instance = modalInstance
@@ -39,7 +50,8 @@ const openModalByFunction2 = function () {
   modalInstance = Modal.open({
     key: '第二个API窗体',
     title: '第二个API窗体',
-    body: () => h(`div`, {
+    showFooter: false,
+    component: () => h(`div`, {
       style: {
         background: 'green'
       },
@@ -54,7 +66,7 @@ const openModalByFunction3 = function () {
   modalInstance = Modal.open({
     key: '第三个API窗体',
     title: '第三个API窗体',
-    body: `<div style="background: green">第三个API窗体, 单纯的String</div>`,
+    component: `<div style="background: green">第三个API窗体, 单纯的String</div>`,
     onClose: () => modalInstance?.close()
   })
 }
@@ -63,7 +75,7 @@ const openModalByFunction4 = function () {
   let modalInstance: ModalInstance
   modalInstance = modal?.open({
     key: '第四个API窗体',
-    body: AboutView,
+    component: AboutView,
     componentProps: {
       userName: '第四个API窗体'
     },

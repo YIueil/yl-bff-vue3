@@ -21,7 +21,7 @@ export class ModalManager implements ModalManagerInterface {
 
   public open<T = any>(options: ModalOptions<T>): ModalInstance {
     let { key } = options
-    const { title, body, footer } = options
+    const { title, component, footer } = options
 
     // 统一挂载到名为 modal-div 这个类名的 div 下
     let mountNode = document.getElementsByClassName('modal-div')[0]
@@ -46,37 +46,34 @@ export class ModalManager implements ModalManagerInterface {
       return h(title)
     }
     const renderBody = (): VNode => {
-      console.log(body, typeof body)
+      console.log(component, typeof component)
       // 为渲染一个空 div 节点
-      if (!body) {
+      if (!component) {
         return h('div')
       }
 
-      if (isVNode(body)) {
-        return body
+      if (isVNode(component)) {
+        return component
       }
 
-      if (typeof body === 'string') {
+      if (typeof component === 'string') {
         // 使用 h() 函数进行渲染
         return h('div', {
-          innerHTML: body
+          innerHTML: component
         })
       }
 
       // 处理 h() 渲染函数
-      if (typeof body === 'function') {
-        return (body as Function)()
+      if (typeof component === 'function') {
+        return (component as Function)()
       }
 
       // 如果是组件
-      if (typeof body === 'object') {
-        return h(body, {
+      if (typeof component === 'object') {
+        return h(component, {
           ...options.componentProps,
           onClose: () => this.close(key),
-          onCloseAll: () => this.closeAll(),
-          onEvent: (event: string, payload?: any) => {
-            options.onComponentEvent?.(event, payload)
-          }
+          onCloseAll: () => this.closeAll()
         })
       }
       return h('div')
@@ -105,9 +102,14 @@ export class ModalManager implements ModalManagerInterface {
             parent: options.parent,
             resizable: options.resizable,
             draggable: options.draggable,
-            onClose: () => {
-              options.onClose?.()
-              this.close()
+            onEvent: (eventName: string) => {
+              const callback = options.on?.[eventName]
+              if (callback) {
+                // 关键: 将内容组件实例传递给回调 TODO 传入 Ctl
+                callback(null)
+              } else {
+                console.error('Model声明未实现的事件', eventName)
+              }
             }
           },
           {

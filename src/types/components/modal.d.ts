@@ -5,6 +5,8 @@ export interface ModalInstance {
   closeAll: () => void
 }
 
+export type EventHandler = (ctl: any) => void
+
 export class ModalManagerInterface {
 
   public open<T = any>(options: ModalOptions<T>): ModalInstance
@@ -12,6 +14,11 @@ export class ModalManagerInterface {
   public close(key: string | number): void
 
   public closeAll(): void
+}
+
+export type ButtonAndEvent = {
+  name: string,
+  eventName: string
 }
 
 export type ModalOptions<T = any> = {
@@ -29,16 +36,16 @@ export type ModalOptions<T = any> = {
 
   // 主体内容
   title?: string | VNode
-  body?: string | Component | (() => VNode) // 支持组件或渲染函数
-  footer?: Component | VNode
+  component?: string | Component | (() => VNode) // 支持组件或渲染函数
+  footer?: Component | VNode | ButtonAndEvent[]
 
   // 组件props
   componentProps?: T
 
   // 事件
-  onClose?: () => void,
-  onCloseAll?: () => void,
-  onComponentEvent?: (event: string, payload?: any) => void
+  on: {
+    [key: string]: EventHandler
+  }
 }
 
 declare module '@vue/runtime-core' {
