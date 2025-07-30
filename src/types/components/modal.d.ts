@@ -9,7 +9,7 @@ export interface ModalInstance<T = ComponentWithUnknownProps> {
   currentInstance?: ComponentPublicInstance & T
 }
 
-export type EventHandler = (ctl: any) => void
+export type EventHandler<T = any> = (ctl: T) => void
 
 export class ModalManagerInterface {
 
