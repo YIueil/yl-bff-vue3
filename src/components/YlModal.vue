@@ -236,6 +236,7 @@ const modalClose = function () {
   /* 容器内元素可正常交互 */
   pointer-events: auto;
   z-index: 9999;
+  overflow: hidden;
 }
 
 .modal-header {
@@ -247,9 +248,6 @@ const modalClose = function () {
   border-bottom: 1px solid #e8e8e8;
   cursor: move;
   user-select: none;
-}
-
-:deep(.vdr-container) {
   overflow: hidden;
 }
 
@@ -315,6 +313,7 @@ const modalClose = function () {
   height: 36px;
   padding: 8px 12px;
   border-top: 1px solid #e8e8e8;
+  overflow: hidden;
 }
 
 .modal-default-button {
