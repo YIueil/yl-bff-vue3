@@ -2,9 +2,17 @@ import { type Component, type VNode } from 'vue'
 import type { ComponentWithUnknownProps } from '@/types'
 
 export interface ModalInstance<T = ComponentWithUnknownProps> {
+  showModal?: boolean,
   getKey: () => string | number
   close: () => void,
   closeAll: () => void,
+  hide: () => void,
+  contentComponent?: ComponentPublicInstance & T,
+  currentInstance?: ComponentPublicInstance & T
+}
+
+export interface ModalAppExport<T = ComponentWithUnknownProps> {
+  showModal?: boolean,
   contentComponent?: ComponentPublicInstance & T,
   currentInstance?: ComponentPublicInstance & T
 }
@@ -18,6 +26,10 @@ export class ModalManagerInterface {
   public close(key: string | number): void
 
   public closeAll(): void
+
+  public hide(key: string | number): void
+
+  public show(key: string | number): void
 }
 
 export type ButtonAndEvent = {

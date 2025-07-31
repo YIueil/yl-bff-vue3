@@ -4,6 +4,7 @@ import AboutView, { type AboutViewExpose } from '@/views/AboutView.vue'
 import { type ModalInstance, ModalManagerInterface } from '@/types/components/modal'
 import ModalViewOptions from '@/views/ModalViewOptions.vue'
 const showModal = ref(false)
+const showFooter = ref(true)
 const modelKey = ref(0)
 
 // 通过全局定义调用
@@ -30,6 +31,9 @@ const openModalByFunction = function () {
       name: '关闭',
       eventName: 'close'
     }, {
+      name: '临时隐藏',
+      eventName: 'hide',
+    }, {
       name: '获取key',
       eventName: 'getKey'
     }, {
@@ -45,6 +49,10 @@ const openModalByFunction = function () {
       },
       close: function (ctl: ModalInstance) {
         ctl.close()
+      },
+      hide: function (ctl: ModalInstance) {
+        console.log(`临时隐藏了 key: ${ctl.getKey()}`)
+        ctl.hide()
       },
       getKey: function (ctl: ModalInstance) {
         console.log(ctl.getKey())
@@ -104,7 +112,7 @@ const openModalByFunction4 = function () {
   <button @click="openModalByFunction3">API弹出Modal3</button>
   <button @click="openModalByFunction4">API弹出Modal4</button>
   <button @click="closeAll">关闭所有</button>
-  <YlModal :key="modelKey" :show="showModal" :show-mask="true" @ok="showModal = false; modelKey++;" @close="showModal = false; modelKey++;">
+  <YlModal :key="modelKey" :show="showModal" :show-footer="showFooter" :show-mask="true" @ok="showFooter = !showFooter" @close="showModal = false; modelKey++;">
     <template v-slot:header>
       弹出框标题很长很长很长很长很长很长很长很长很长很长很长很长很长很长
     </template>

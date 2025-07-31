@@ -10,7 +10,8 @@
 <script setup lang="ts">
 // 临时这样写, 实际像项目单独创建.ts文件或者在types下统一管理
 export interface AboutViewExpose  {
-  count: number,
+  count: number
+  showModal: boolean
   getCount: () => number
   increment: () => void
 }

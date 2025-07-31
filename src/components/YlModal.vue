@@ -40,7 +40,7 @@
                 <IMdiResize v-if="minimize" @click="windowResize" />
                 <IMdiWindowMaximize v-if="!maximize && !minimize" @click="windowMaximize" />
                 <IMdiWindowRestore v-else-if="maximize && !minimize" @click="windowMaximize" />
-                <IMdiClose @click="$emit('event', 'close')" />
+                <IMdiClose @click="modalClose" />
               </div>
             </div>
 
@@ -174,11 +174,15 @@ const windowMaximize = function () {
 
 const onMaskClick = function () {
   if (props.clickMaskClose) {
-    if (props.clickMaskClose) {
-      emits('close')
-    }
+    emits('close')
   }
 }
+
+const modalClose = function () {
+  emits('close')
+  emits('event', 'close')
+}
+
 </script>
 
 <style scoped>

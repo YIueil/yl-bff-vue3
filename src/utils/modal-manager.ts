@@ -1,7 +1,13 @@
 import type { App } from 'vue'
 import { createApp, h, isVNode } from 'vue'
 import YlModal from '@/components/YlModal.vue'
-import type { EventHandler, ModalInstance, ModalManagerInterface, ModalOptions } from '@/types/components/modal'
+import type {
+  EventHandler,
+  ModalAppExport,
+  ModalInstance,
+  ModalManagerInterface,
+  ModalOptions
+} from '@/types/components/modal'
 // 第三方拖拽组件
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 //default styles
@@ -15,8 +21,10 @@ export class ModalManager implements ModalManagerInterface {
     {
       // 应用实例
       app: App
-      // modal实例
-      modalContext: ComponentPublicInstance
+      // modal上下文
+      modalContext: ComponentPublicInstance & ModalAppExport,
+      // modalInstance实例
+      modalInstance: ModalInstance
     }
   > = new Map()
 
@@ -30,6 +38,19 @@ export class ModalManager implements ModalManagerInterface {
   public open<T = any>(options: ModalOptions<T>): ModalInstance {
     // ModalInstance 对象
     let { key } = options
+    if (!key) {
+      key = Math.random()
+    }
+    const modalEntry = this.modalEntryMap.get(key)
+    if (modalEntry) {
+      this.show(key)
+      return {
+        getKey: () => key,
+        close: () => this.close(key),
+        closeAll: () => this.closeAll(),
+        hide: () => this.hide(key)
+      }
+    }
     const { title, component, footer, on: onEvent } = options
 
     // 统一挂载到名为 modal-div 这个类名的 div 下
@@ -37,9 +58,6 @@ export class ModalManager implements ModalManagerInterface {
     if (!mountNode) {
       mountNode = document.createElement('div')
       document.body.appendChild(mountNode)
-    }
-    if (!key) {
-      key = Math.random()
     }
 
     // 渲染函数
@@ -114,22 +132,30 @@ export class ModalManager implements ModalManagerInterface {
       setup() {
         const currentInstance = getCurrentInstance()
         const contentComponent = ref(null)
+        // 初始不展示, 为了保证动画能够正常加载, 挂载后再进行展示
+        const showModal = ref(false)
+        // 在挂载后，我们可以改变这个值
+        onMounted(() => {
+          // 挂载后，我们可以将showModal改为true，这样模态框就会显示
+          showModal.value = true
+        })
         // 返回值会暴露给模板和其他的选项式 API 钩子
         return {
           // 这里如果增加东西, 最好扩展到 ModalInstance 这个接口中
           currentInstance,
-          contentComponent
+          contentComponent,
+          showModal
         }
       },
       render() {
         return h(
           YlModal,
           {
-            show: true,
+            show: this.showModal,
             showMask: options.showMask,
-            showHeader: options.showHeader !== false,
+            showHeader: options.showHeader,
             showBody: true,
-            showFooter: options.showFooter !== false,
+            showFooter: options.showFooter,
             clickMaskClose: options.clickMaskClose,
             isTeleport: options.isTeleport,
             parent: options.parent,
@@ -146,23 +172,26 @@ export class ModalManager implements ModalManagerInterface {
       },
       methods: {
         getKey: () => key,
+        hide: () => this.hide(key),
         close: () => this.close(key),
         closeAll: () => this.closeAll(),
         onEvent: (eventName: string) => this.onEvent(key, eventName, onEvent)
       }
     })
     modalApp.use(Vue3DraggableResizable)
-    const modalContext = modalApp.mount(mountNode)
-    this.modalEntryMap.set(key, {
-      app: modalApp,
-      modalContext: modalContext
-    })
-
-    return {
+    const modalContext: ComponentPublicInstance = modalApp.mount(mountNode)
+    const modalInstance = {
       getKey: () => key,
       close: () => this.close(key),
-      closeAll: () => this.closeAll()
+      closeAll: () => this.closeAll(),
+      hide: () => this.hide(key)
     }
+    this.modalEntryMap.set(key, {
+      app: modalApp,
+      modalContext: modalContext,
+      modalInstance: modalInstance
+    })
+    return modalInstance
   }
 
   public onEvent(
@@ -194,6 +223,22 @@ export class ModalManager implements ModalManagerInterface {
           console.error(`Model声明未实现的事件${eventName}, key: ${key}`)
       }
     }
+  }
+
+  public hide(key: string | number) {
+    const modalEntry = this.modalEntryMap.get(key)
+    if (!modalEntry) return
+
+    const { modalContext } = modalEntry
+    modalContext.showModal = false
+  }
+
+  public show(key: string | number) {
+    const modalEntry = this.modalEntryMap.get(key)
+    if (!modalEntry) return
+
+    const { modalContext } = modalEntry
+    modalContext.showModal = true
   }
 
   public close(key: string | number): void {
