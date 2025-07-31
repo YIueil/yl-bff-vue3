@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body" :disabled="!isTeleport">
     <Transition name="modal">
-      <div v-if="show" :class="['modal-wrapper', { 'with-mask': localShowMask }]">
+      <div v-if="visible" v-show="show" :class="['modal-wrapper', { 'with-mask': localShowMask }]">
         <div v-if="localShowMask" class="modal-mask" @click.self="onMaskClick"></div>
         <Vue3DraggableResizable
           :parent="parent"
@@ -31,7 +31,7 @@
           @resize-end="print('resize-end')"
         >
           <div class="modal-container">
-            <div v-if="showHeader" class="modal-header">
+            <div v-show="showHeader" class="modal-header">
               <div class="header-title">
                 <slot name="header">[请定义标题]</slot>
               </div>
@@ -44,11 +44,11 @@
               </div>
             </div>
 
-            <div v-if="localShowBody" class="modal-body" @mousedown.stop>
+            <div v-show="localShowBody" class="modal-body" @mousedown.stop>
               <slot name="body">[请定义内容]</slot>
             </div>
 
-            <div v-if="localShowFooter" class="modal-footer" @mousedown.stop>
+            <div v-show="localShowFooter" class="modal-footer" @mousedown.stop>
               <slot name="footer">
                 <button class="modal-default-button" @click="$emit('ok')">OK</button>
                 <button class="modal-default-button" @click="$emit('cancel')">Cancel</button>
@@ -66,7 +66,14 @@ import { useWindowSize } from '@vueuse/core'
 
 const emits = defineEmits(['event', 'close', 'ok', 'cancel'])
 const props = defineProps({
-  show: Boolean,
+  visible: {
+    type: Boolean,
+    default: false,
+  },
+  show: {
+    type: Boolean,
+    default: true
+  },
   showMask: {
     type: Boolean,
     default: true
@@ -195,6 +202,7 @@ const modalClose = function () {
   height: 100%;
   /* 允许点击穿透 */
   pointer-events: none;
+  overflow: hidden;
 }
 
 .with-mask {
@@ -239,6 +247,10 @@ const modalClose = function () {
   border-bottom: 1px solid #e8e8e8;
   cursor: move;
   user-select: none;
+}
+
+:deep(.vdr-container) {
+  overflow: hidden;
 }
 
 :deep(.custom-handle-br) {

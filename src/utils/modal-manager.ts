@@ -5,7 +5,7 @@ import type {
   EventHandler,
   ModalAppExport,
   ModalInstance,
-  ModalManagerInterface,
+  ModalManagerInterface, ModalObject,
   ModalOptions
 } from '@/types/components/modal'
 // 第三方拖拽组件
@@ -16,17 +16,7 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 export class ModalManager implements ModalManagerInterface {
   private static instance: ModalManager
   // Modal实例Map
-  private modalEntryMap: Map<
-    string | number,
-    {
-      // 应用实例
-      app: App
-      // modal上下文
-      modalContext: ComponentPublicInstance & ModalAppExport,
-      // modalInstance实例
-      modalInstance: ModalInstance
-    }
-  > = new Map()
+  private modalEntryMap: Map<string | number, ModalObject> = new Map()
 
   public static getInstance(): ModalManager {
     if (!ModalManager.instance) {
@@ -133,17 +123,20 @@ export class ModalManager implements ModalManagerInterface {
         const currentInstance = getCurrentInstance()
         const contentComponent = ref(null)
         // 初始不展示, 为了保证动画能够正常加载, 挂载后再进行展示
-        const showModal = ref(false)
+        const visible = ref(false)
+        // 控制临时隐藏 Modal 组件
+        const showModal = ref(true)
         // 在挂载后，我们可以改变这个值
         onMounted(() => {
-          // 挂载后，我们可以将showModal改为true，这样模态框就会显示
-          showModal.value = true
+          // 挂载后，我们可以将visible改为true，这样模态框就会显示
+          visible.value = true
         })
         // 返回值会暴露给模板和其他的选项式 API 钩子
         return {
           // 这里如果增加东西, 最好扩展到 ModalInstance 这个接口中
           currentInstance,
           contentComponent,
+          visible,
           showModal
         }
       },
@@ -151,6 +144,7 @@ export class ModalManager implements ModalManagerInterface {
         return h(
           YlModal,
           {
+            visible: this.visible,
             show: this.showModal,
             showMask: options.showMask,
             showHeader: options.showHeader,
@@ -223,6 +217,18 @@ export class ModalManager implements ModalManagerInterface {
           console.error(`Model声明未实现的事件${eventName}, key: ${key}`)
       }
     }
+  }
+
+  public getModal(key: string | number): ModalObject | undefined {
+    return this.modalEntryMap.get(key)
+  }
+
+  public listModal(): IterableIterator<ModalObject> {
+    return this.modalEntryMap.values()
+  }
+
+  public getModalEntryMap() {
+    return this.modalEntryMap
   }
 
   public hide(key: string | number) {

@@ -103,16 +103,20 @@ const openModalByFunction4 = function () {
     showHeader: true
   })
 }
+
 </script>
 
 <template>
+  <button @click="console.log(modal?.listModal())">打印所有的Modal信息</button>
+  <button @click="console.log(modal?.getModalEntryMap())">打印ModalEntryMap</button>
+  <br/>
   <button @click="showModal = true">弹出Modal</button>
   <button @click="openModalByFunction">API弹出Modal1</button>
   <button @click="openModalByFunction2">API弹出Modal2</button>
   <button @click="openModalByFunction3">API弹出Modal3</button>
   <button @click="openModalByFunction4">API弹出Modal4</button>
   <button @click="closeAll">关闭所有</button>
-  <YlModal :key="modelKey" :show="showModal" :show-footer="showFooter" :show-mask="true" @ok="showFooter = !showFooter" @close="showModal = false; modelKey++;">
+  <YlModal :key="modelKey" :visible="showModal" :show-footer="showFooter" :show-mask="true" @ok="showFooter = !showFooter" @close="showModal = false; modelKey++;">
     <template v-slot:header>
       弹出框标题很长很长很长很长很长很长很长很长很长很长很长很长很长很长
     </template>
