@@ -1,3 +1,5 @@
+@import url('./css/button.css');
+
 /*region 现代化的滚动条*/
 /* 整个滚动条区域 */
 ::-webkit-scrollbar {

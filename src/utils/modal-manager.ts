@@ -1,11 +1,11 @@
 import type { App } from 'vue'
 import { createApp, h, isVNode } from 'vue'
-import YlModal from '@/components/YlModal.vue'
+import YlModal from '@/components/Modal/YlModal.vue'
 import type {
   EventHandler,
-  ModalAppExport,
   ModalInstance,
-  ModalManagerInterface, ModalObject,
+  ModalManagerInterface,
+  ModalObject,
   ModalOptions
 } from '@/types/components/modal'
 // 第三方拖拽组件
@@ -155,7 +155,7 @@ export class ModalManager implements ModalManagerInterface {
             parent: options.parent,
             resizable: options.resizable,
             draggable: options.draggable,
-            onEvent: (eventName) => this.onEvent(eventName)
+            onEvent: (eventName: string) => this.onEvent(eventName)
           },
           {
             header: () => renderHeader(),

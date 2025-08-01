@@ -8,12 +8,13 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     IMdiClose: typeof import('~icons/mdi/close')['default']
+    IMdiHome: typeof import('~icons/mdi/home')['default']
     IMdiMinus: typeof import('~icons/mdi/minus')['default']
     IMdiResize: typeof import('~icons/mdi/resize')['default']
     IMdiWindowMaximize: typeof import('~icons/mdi/window-maximize')['default']
     IMdiWindowRestore: typeof import('~icons/mdi/window-restore')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    YlModal: typeof import('./src/components/YlModal.vue')['default']
+    YlModal: typeof import('./src/components/Modal/YlModal.vue')['default']
   }
 }

@@ -12,6 +12,7 @@ import { RouterLink, RouterView } from 'vue-router'
         <RouterLink to="/drag">Draggable</RouterLink>
         <RouterLink to="/drag-resize">DragResize</RouterLink>
         <RouterLink to="/modal">Modal</RouterLink>
+        <RouterLink to="/button">Button</RouterLink>
       </nav>
     </div>
   </header>

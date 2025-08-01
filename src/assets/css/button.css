@@ -1,0 +1,121 @@
+/* 基础按钮样式 */
+.button {
+    position: relative;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    outline: none;
+    text-align: center;
+    padding: 10px 12px;
+    min-width: 80px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: nowrap; /* 防止文字换行 */
+    text-overflow: ellipsis; /* 显示省略号 */
+}
+
+.button-large {
+    padding: 12px 12px;
+    min-width: 100px;
+}
+
+.button-small {
+    padding: 8px 12px;
+    min-width: 60px;
+}
+
+/* 悬停效果 */
+.button:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 激活效果 */
+.button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 焦点效果 */
+.button:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+/* 主按钮 */
+.button-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.button-primary:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46a1 100%);
+}
+
+/* 危险按钮 */
+.button-danger {
+    background: linear-gradient(135deg, #da1f8f 0%, #f5576c 100%);
+    color: white;
+}
+
+.button-danger:hover {
+    background: linear-gradient(135deg, #da1f8f 0%, #f44336 100%);
+}
+
+/* 边框按钮 */
+.button-outline {
+    background: transparent;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.button-outline:hover {
+    background: #667eea;
+    color: white;
+}
+
+/* 幽灵按钮 */
+.button-ghost {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #333;
+}
+
+.button-ghost:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 按钮内波纹效果 */
+.button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+}
+
+.button:focus:not(:active)::after {
+    animation: ripple 0.3s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
+}

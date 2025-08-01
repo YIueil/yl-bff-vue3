@@ -73,12 +73,9 @@ import { Icon } from '@iconify/vue'
 - [ ] 移动端优化
 - [ ] 优化最小化的排列功能
 
-TODO
-- [ ] 学习`h()`渲染函数
-- [ ] 了解什么时候使用`type`什么时候使用`class`
-
 ### 3 VueUse 引入使用
 VueUse是基于CompositionAPI的一套实用函数集合。
 
 ### 4 base.css 通用样式
 - [x] 现代化的滚动条
+- [x] 简单的一套按钮样式

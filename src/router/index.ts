@@ -33,6 +33,11 @@ const router = createRouter({
       path: '/modal',
       name: 'modal',
       component: () => import('../views/ModalView.vue')
+    },
+    {
+      path: '/button',
+      name: 'button',
+      component: () => import('../views/ButtonView.vue')
     }
   ]
 })
