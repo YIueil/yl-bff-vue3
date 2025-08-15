@@ -16,6 +16,7 @@ const baseurl = import.meta.env.VITE_API_BASE_URL
         <RouterLink to="/drag-resize">DragResize</RouterLink>
         <RouterLink to="/modal">Modal</RouterLink>
         <RouterLink to="/button">Button</RouterLink>
+        <RouterLink to="/echarts">Echarts</RouterLink>
       </nav>
     </div>
   </header>

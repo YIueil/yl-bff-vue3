@@ -73,6 +73,11 @@ import { Icon } from '@iconify/vue'
 - [ ] 移动端优化
 - [ ] 优化最小化的排列功能
 
+### 2.5 Echarts 图表引入
+支持图表。
+- [ ] Typescript 懒加载
+- [ ] Echarts 组件
+
 ### 3 VueUse 引入使用
 VueUse是基于CompositionAPI的一套实用函数集合。
 
