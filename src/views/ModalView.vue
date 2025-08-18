@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Modal } from '@/utils/modal-manager'
 import AboutView, { type AboutViewExpose } from '@/views/AboutView.vue'
-import { type ModalInstance, ModalManagerInterface } from '@/types/components/modal'
+import { type ModalInstance, ModalManagerInterface } from '@/types/components/modal.d'
 import ModalViewOptions from '@/views/ModalViewOptions.vue'
 const showModal = ref(false)
 const showFooter = ref(true)
