@@ -5,8 +5,9 @@
 <script setup lang="ts">
 import echarts from '@/core/echarts-import'
 import type { ECOption } from '@/core/echarts-import'
+import type { EChartsType } from 'echarts/core'
 const echartsDom = ref<HTMLDivElement | null>()
-const echartsInstance = ref()
+const echartsInstance = ref<EChartsType>()
 // 等待dom加载完成后渲染
 setTimeout(() => {
   const option: ECOption = {
