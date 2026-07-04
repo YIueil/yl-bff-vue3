@@ -72,9 +72,3 @@ export type ModalOptions<T = any> = {
     [key: string]: EventHandler
   }
 }
-
-declare module 'vue' {
-  interface ComponentCustomProperties {
-    $modal: ModalManagerInterface
-  }
-}

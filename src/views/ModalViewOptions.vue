@@ -11,7 +11,7 @@ export default defineComponent({
   },
   methods: {
     showModal () {
-      this.$modal.open({
+      this.$modal.open<{ userName: string }>({
         key: '通过选项式API创建的窗体',
         title: '通过选项式API创建的窗体',
         component: AboutView,
