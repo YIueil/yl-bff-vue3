@@ -1,0 +1,37 @@
+# TODO
+
+本清单基于当前代码状态整理。优先处理构建阻塞、运行时缺陷和安全风险，再补齐工程能力，最后推进体验与规划性功能。
+
+## 高优先级
+
+- [ ] 修复 Vue 全局属性 `$modal` 的类型扩展，使 `ModalViewOptions.vue` 能正确识别 `this.$modal`，并确保 `pnpm run type-check` 和 `pnpm run build` 通过。
+- [ ] 迁移 ESLint 9 配置或锁定兼容版本，移除失效的 `--ignore-path` 参数，确保 `pnpm run lint` 可以执行且不会产生非预期批量修改。
+- [ ] 修复 API Modal 的关闭链路：遮罩点击、标题栏关闭、默认 footer 事件都应正确关闭窗口并从 `modalEntryMap` 清理。
+- [ ] 消除 Modal 字符串标题和内容直接使用 `innerHTML` 的 XSS 风险；默认按文本渲染，仅为可信内容提供显式 HTML API 或可靠的清洗流程。
+- [ ] 修正 `ModalViewOptions.vue` 与 `ModalOptions` 的接口偏差，移除无效的 `body`、`onClose` 用法，统一为 `component` 和 `on` 事件模型。
+- [ ] 完善动态 Modal 的挂载机制，保证多个窗口拥有独立、明确的挂载节点，并在关闭和 `closeAll()` 后完整卸载 app、DOM 与事件资源。
+- [ ] 修复 ECharts 生命周期管理：在 mounted 后初始化，在 unmounted 前 `dispose()`，响应容器尺寸变化，移除当前不可靠的 `setTimeout()` 初始化。
+
+## 中优先级
+
+- [ ] 引入单元/组件测试框架，优先覆盖 Modal 的打开、重复 key、隐藏恢复、关闭全部、遮罩关闭、自定义事件和内容组件 expose 调用。
+- [ ] 为 Router、Pinia、provide 和全局插件设计动态 Modal 上下文继承方案，避免 Modal 内容组件在独立 `createApp()` 中丢失主应用能力。
+- [ ] 收紧 Modal 类型：减少 `any`，补全 `ModalManagerInterface` 返回类型，统一 footer 按钮必填字段，并为内容组件暴露能力提供泛型约束。
+- [ ] 让 Modal props 与内部状态保持同步，并补充窗口 resize、超小视口、最小化排列及移动端触控适配。
+- [ ] 将 SVG 转 Iconify JSON 的流程改为可复现的 pnpm 脚本，增加明确的 TypeScript runner，并基于脚本文件位置解析输入输出路径。
+- [ ] 优化 ECharts 打包体积；当前页面 chunk 约 562 kB，应评估进一步拆分、异步加载或调整模块边界。
+- [ ] 封装可复用的 ECharts 组件或 composable，统一初始化、更新 option、resize 和 dispose 行为。
+- [ ] 为 `VITE_API_BASE_URL` 等客户端环境变量补充 `ImportMetaEnv` 类型，并增加缺失值校验。
+- [ ] 更新 README 中失效或不准确的内容，包括 Modal 组件路径、SVG 生成方式、pnpm 版本和 production 命令含义。
+- [ ] 建立 CI，至少执行依赖安装、类型检查、lint、测试和生产构建。
+
+## 低优先级
+
+- [ ] 改进演示站布局和响应式导航，使各功能页面在桌面端和移动端均可直接验证。
+- [ ] 完善按钮样式的 disabled、loading、键盘焦点和无障碍状态，并避免依赖 WebKit 的单一浏览器样式。
+- [ ] 清理或扩展脚手架遗留的 `counter` Pinia store，避免保留没有实际入口的示例代码。
+- [ ] 评估通过 UnoCSS 使用 Iconify；确认收益后再替换当前 `unplugin-icons` 方案，避免同时维护两套约定。
+- [ ] 增加路由级错误页、404 页面和异步页面加载失败处理。
+- [ ] 在基础设施稳定后实现 GitHub OAuth2 登录流程，并避免在纯前端保存客户端密钥。
+- [ ] 基于路由 meta 和后端授权数据实现路由守卫、动态菜单及按钮权限控制。
+- [ ] 增加可访问性检查，包括 Modal 焦点锁定、Esc 关闭、ARIA 属性和关闭后的焦点恢复。
