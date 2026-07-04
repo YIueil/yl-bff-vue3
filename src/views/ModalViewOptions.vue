@@ -11,16 +11,15 @@ export default defineComponent({
   },
   methods: {
     showModal () {
-      const modalInstance = this.$modal.open({
+      this.$modal.open({
         key: '通过选项式API创建的窗体',
         title: '通过选项式API创建的窗体',
-        body: AboutView,
+        component: AboutView,
         componentProps: {
           userName: '通过选项式API创建的窗体'
         },
         showMask: true,
-        showHeader: true,
-        onClose: () => modalInstance?.close()
+        showHeader: true
       })
     }
   }
