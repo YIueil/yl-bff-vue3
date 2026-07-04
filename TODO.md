@@ -5,7 +5,7 @@
 ## 高优先级
 
 - [X] 修复 Vue 全局属性 `$modal` 的类型扩展，使 `ModalViewOptions.vue` 能正确识别 `this.$modal`，并确保 `pnpm run type-check` 和 `pnpm run build` 通过。
-- [ ] 迁移 ESLint 9 配置或锁定兼容版本，移除失效的 `--ignore-path` 参数，确保 `pnpm run lint` 可以执行且不会产生非预期批量修改。
+- [X] 迁移 ESLint 9 配置或锁定兼容版本，移除失效的 `--ignore-path` 参数，确保 `pnpm run lint` 可以执行且不会产生非预期批量修改。
 - [ ] 修复 API Modal 的关闭链路：遮罩点击、标题栏关闭、默认 footer 事件都应正确关闭窗口并从 `modalEntryMap` 清理。
 - [ ] 消除 Modal 字符串标题和内容直接使用 `innerHTML` 的 XSS 风险；默认按文本渲染，仅为可信内容提供显式 HTML API 或可靠的清洗流程。
 - [ ] 修正 `ModalViewOptions.vue` 与 `ModalOptions` 的接口偏差，移除无效的 `body`、`onClose` 用法，统一为 `component` 和 `on` 事件模型。

@@ -42,6 +42,7 @@ pnpm run build
 pnpm run build-only
 pnpm run type-check
 pnpm run lint
+pnpm run lint:fix
 pnpm run format
 pnpm run preview
 ```
@@ -55,10 +56,10 @@ pnpm run preview
 
 ### 当前校验基线
 
-以下是 2026-07-04 基于当前 `master` 代码确认的既有问题，不能直接归因于后续改动：
+以下是 2026-07-05 基于当前代码确认的校验基线：
 
-- `pnpm run build` 的类型检查失败：`src/views/ModalViewOptions.vue` 中的 `this.$modal` 未被组件实例类型识别。
-- `pnpm run lint` 在启动阶段失败：ESLint 9 不再接受脚本中的 `--ignore-path` 参数，项目仍使用旧式 `.eslintrc.cjs`。
+- `pnpm run type-check` 可以成功完成。
+- `pnpm run lint` 使用 ESLint 9 flat config，可以成功完成且默认不修改文件；需要自动修复时显式运行 `pnpm run lint:fix`。
 - `pnpm run build-only` 可以成功完成，但 ECharts 页面产物约 562 kB，会触发 Vite 的 500 kB chunk size 警告。
 - 修改相关区域时应尽量修复对应问题；若任务范围不包含工具链修复，最终报告中要明确区分既有失败和新失败。
 

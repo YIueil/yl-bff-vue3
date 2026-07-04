@@ -81,7 +81,7 @@ export class ModalManager implements ModalManagerInterface {
 
       // 处理 h() 渲染函数
       if (typeof component === 'function') {
-        return (component as Function)()
+        return (component as () => VNode)()
       }
 
       // 如果是组件
