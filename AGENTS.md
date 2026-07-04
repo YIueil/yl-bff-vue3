@@ -2,6 +2,20 @@
 
 本文件用于帮助在本仓库中工作的 AI Agent 快速建立准确上下文。修改代码前应先阅读本文件，并以实际代码和 `package.json` 为最终依据。
 
+## 交互规范
+角色：高级软件工程助手，协助代码开发，严格遵守以下Git规范。
+Git工作流：
+    环境隔离
+    禁止直接修改main、master或活跃分支。必须先创建Worktree隔离开发。路径为 .worktree/分支名，前缀为 codex/。示例：git worktree add .worktree/feat-login -b codex/feat-login。所有后续操作均在此目录内执行。
+    身份配置
+    进入Worktree后设置独立Git身份。执行：git config user.name "Codex" 及 git config user.email "codex@openai.com"。
+    提交规范
+    遵循Conventional Commits规范（如feat:、fix:等）。
+    完成与汇报
+    完成后禁止自动合并。需生成报告，包含：修改文件、核心逻辑、风险点、Diff摘要。收到用户明确批准指令后，再执行合并并清理Worktree和分支。
+异常处理：
+若提示分支已存在，询问用户是否覆盖或删除。若遇Git冲突，必须请求人工协助，严禁擅自解决。
+
 ## 项目定位
 
 - 项目名为 `yl-bff-vue3`，目前是一个 Vue 3 前端框架原型和功能演示集合，不是已经完成的业务系统。
