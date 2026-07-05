@@ -15,7 +15,7 @@
 ## 中优先级
 
 - [ ] 引入单元/组件测试框架，优先覆盖 Modal 的打开、重复 key、隐藏恢复、关闭全部、遮罩关闭、自定义事件和内容组件 expose 调用。
-- [ ] 为 Router、Pinia、provide 和全局插件设计动态 Modal 上下文继承方案，避免 Modal 内容组件在独立 `createApp()` 中丢失主应用能力。
+- [ ] 为 Router、Pinia、provide 和全局插件设计动态 Modal 上下文继承方案，避免 Modal 内容组件在独立 `createApp()` 中丢失主应用能力。参见 [动态 Modal 主应用上下文继承方案](docs/dynamic-modal-context-inheritance.md)。
 - [ ] 收紧 Modal 类型：减少 `any`，补全 `ModalManagerInterface` 返回类型，统一 footer 按钮必填字段，并为内容组件暴露能力提供泛型约束。
 - [ ] 让 Modal props 与内部状态保持同步，并补充窗口 resize、超小视口、最小化排列及移动端触控适配。
 - [X] 将 SVG 转 Iconify JSON 的流程改为可复现的 pnpm 脚本，增加明确的 TypeScript runner，并基于脚本文件位置解析输入输出路径。
