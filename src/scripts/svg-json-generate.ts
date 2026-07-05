@@ -1,98 +1,104 @@
-import { cleanupSVG, importDirectorySync, isEmptyColor, parseColors, runSVGO } from '@iconify/tools'
-import * as fs from 'node:fs'
+import {
+  cleanupSVG,
+  importDirectorySync,
+  isEmptyColor,
+  parseColors,
+  runSVGO,
+  type IconSet
+} from '@iconify/tools'
+import { writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const scriptDirectory = dirname(fileURLToPath(import.meta.url))
 const config = {
   // 单色图标
-  singleSvgDirPath: '../assets/images/svg/single',
+  singleSvgDirPath: resolve(scriptDirectory, '../assets/images/svg/single'),
   // 多彩图标
-  multiSvgDirPath: '../assets/images/svg/multi',
+  multiSvgDirPath: resolve(scriptDirectory, '../assets/images/svg/multi'),
   // 单色生成路径
-  outputSingleJsonFile: '../assets/json/singleJsonFile.json',
+  outputSingleJsonFile: resolve(scriptDirectory, '../assets/json/singleJsonFile.json'),
   // 多彩生成路径
-  outputMultiJsonFile: '../assets/json/multiJsonFile.json'
+  outputMultiJsonFile: resolve(scriptDirectory, '../assets/json/multiJsonFile.json')
 }
-// Import icons
+
+function processIconSet(iconSet: IconSet, monochrome: boolean) {
+  const invalidIcons: string[] = []
+
+  iconSet.forEachSync((name, type) => {
+    if (type !== 'icon') {
+      return
+    }
+
+    const svg = iconSet.toSVG(name)
+    if (!svg) {
+      invalidIcons.push(name)
+      iconSet.remove(name)
+      return
+    }
+
+    try {
+      cleanupSVG(svg)
+
+      if (monochrome) {
+        parseColors(svg, {
+          defaultColor: 'currentColor',
+          callback: (_attr, colorString, color) => {
+            return !color || isEmptyColor(color) ? colorString : 'currentColor'
+          }
+        })
+      }
+
+      runSVGO(svg)
+      iconSet.fromSVG(name, svg)
+    } catch (error) {
+      console.error(`Error parsing ${name}:`, error)
+      invalidIcons.push(name)
+      iconSet.remove(name)
+    }
+  })
+
+  if (invalidIcons.length > 0) {
+    throw new Error(`Failed to generate icons: ${invalidIcons.join(', ')}`)
+  }
+}
+
+function sortJsonValue(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(sortJsonValue)
+  }
+
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, sortJsonValue((value as Record<string, unknown>)[key])])
+    )
+  }
+
+  return value
+}
+
+function serializeIconSet(iconSet: IconSet) {
+  const data = iconSet.export()
+  delete data.lastModified
+
+  return `${JSON.stringify(sortJsonValue(data))}\n`
+}
+
 const singleIconSet = importDirectorySync(config.singleSvgDirPath, {
   prefix: 'custom'
 })
-
 const multiIconSet = importDirectorySync(config.multiSvgDirPath, {
   prefix: 'custom'
 })
 
-// 单色图标处理
-singleIconSet.forEachSync((name, type) => {
-  if (type !== 'icon') {
-    return
-  }
+processIconSet(singleIconSet, true)
+processIconSet(multiIconSet, false)
 
-  const svg = singleIconSet.toSVG(name)
-  if (!svg) {
-    // Invalid icon
-    singleIconSet.remove(name)
-    return
-  }
+writeFileSync(config.outputSingleJsonFile, serializeIconSet(singleIconSet), 'utf8')
+writeFileSync(config.outputMultiJsonFile, serializeIconSet(multiIconSet), 'utf8')
 
-  // Clean up and optimise icons
-  try {
-    // Clean up icon code
-    cleanupSVG(svg)
-
-    // 如果要生成单色svg图标则执行该代码
-    parseColors(svg, {
-      defaultColor: 'currentColor',
-      callback: (attr, colorStr, color) => {
-        return !color || isEmptyColor(color) ? colorStr : 'currentColor'
-      }
-    })
-
-    // Optimise
-    runSVGO(svg)
-  } catch (err) {
-    // Invalid icon
-    console.error(`Error parsing ${name}:`, err)
-    singleIconSet.remove(name)
-    return
-  }
-
-  // Update icon
-  singleIconSet.fromSVG(name, svg)
-})
-
-// 多色图标处理
-multiIconSet.forEachSync((name, type) => {
-  if (type !== 'icon') {
-    return
-  }
-
-  const svg = multiIconSet.toSVG(name)
-  if (!svg) {
-    // Invalid icon
-    multiIconSet.remove(name)
-    return
-  }
-
-  // Clean up and optimise icons
-  try {
-    // Clean up icon code
-    cleanupSVG(svg)
-
-    // Optimise
-    runSVGO(svg)
-  } catch (err) {
-    // Invalid icon
-    console.error(`Error parsing ${name}:`, err)
-    multiIconSet.remove(name)
-    return
-  }
-
-  // Update icon
-  multiIconSet.fromSVG(name, svg)
-})
-
-// Export
-console.log(multiIconSet.export())
-console.log(singleIconSet.export())
-
-fs.writeFileSync(config.outputSingleJsonFile, JSON.stringify(singleIconSet.export()))
-fs.writeFileSync(config.outputMultiJsonFile, JSON.stringify(multiIconSet.export()))
+console.log(
+  `Generated ${singleIconSet.count()} monochrome icons and ${multiIconSet.count()} multicolor icons.`
+)
