@@ -50,8 +50,8 @@
 
             <div v-show="localShowFooter" class="modal-footer" @mousedown.stop>
               <slot name="footer">
-                <button class="modal-default-button" @click="$emit('ok')">OK</button>
-                <button class="modal-default-button" @click="$emit('cancel')">Cancel</button>
+                <a-button @click="$emit('ok')">OK</a-button>
+                <a-button @click="$emit('cancel')">Cancel</a-button>
               </slot>
             </div>
           </div>
@@ -314,10 +314,6 @@ const modalClose = function () {
   padding: 8px 12px;
   border-top: 1px solid #e8e8e8;
   overflow: hidden;
-}
-
-.modal-default-button {
-  float: right;
 }
 
 .modal-enter-from {
