@@ -228,8 +228,8 @@ const apiRows = [
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-actions">
-          <button class="button button-primary" @click="showModal = true">弹出 Modal</button>
-          <button class="button button-outline" @click="closeDeclarativeModal">关闭并重建</button>
+          <a-button type="primary" @click="showModal = true">弹出 Modal</a-button>
+          <a-button @click="closeDeclarativeModal">关闭并重建</a-button>
           <p class="doc-hint">共享 Pinia count: {{ counterStore.count }}</p>
         </a-card>
       </a-tab-pane>
@@ -258,11 +258,11 @@ const apiRows = [
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-actions">
-          <button class="button button-primary" @click="openModalByFunction">完整示例（含 footer + on）</button>
-          <button class="button" @click="openModalByInject">通过 inject 调用</button>
-          <button class="button" @click="openModalByString">字符串内容</button>
-          <button class="button" @click="openModalByVNode">函数式 VNode</button>
-          <button class="button button-danger" @click="closeAll">关闭所有</button>
+          <a-button type="primary" @click="openModalByFunction">完整示例（含 footer + on）</a-button>
+          <a-button @click="openModalByInject">通过 inject 调用</a-button>
+          <a-button @click="openModalByString">字符串内容</a-button>
+          <a-button @click="openModalByVNode">函数式 VNode</a-button>
+          <a-button type="danger" @click="closeAll">关闭所有</a-button>
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
@@ -274,7 +274,7 @@ const apiRows = [
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-actions">
-          <button class="button button-primary" @click="openModalByOptions">选项式弹出 Modal</button>
+          <a-button type="primary" @click="openModalByOptions">选项式弹出 Modal</a-button>
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
@@ -288,7 +288,7 @@ const apiRows = [
       因此内容组件可以直接访问 Router、Pinia、应用级 provide 和 <code>$modal</code>。
     </a-typography-paragraph>
     <a-card class="doc-card-actions">
-      <button class="button button-primary" @click="openContextProbe">验证主应用上下文</button>
+      <a-button type="primary" @click="openContextProbe">验证主应用上下文</a-button>
     </a-card>
 
     <a-typography-title id="trusted" data-anchor="trusted" :level="2">可信 HTML</a-typography-title>
@@ -296,7 +296,7 @@ const apiRows = [
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-actions">
-          <button class="button button-primary" @click="openModalByTrustedHtml">弹出可信 HTML 弹窗</button>
+          <a-button type="primary" @click="openModalByTrustedHtml">弹出可信 HTML 弹窗</a-button>
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
@@ -309,7 +309,7 @@ const apiRows = [
       通过 <code>draggable</code> / <code>resizable</code> 选项开启；resize handle 仅在右下角。
     </a-typography-paragraph>
     <a-card class="doc-card-actions">
-      <button class="button button-primary" @click="openDraggableModal">弹出可拖拽缩放弹窗</button>
+      <a-button type="primary" @click="openDraggableModal">弹出可拖拽缩放弹窗</a-button>
     </a-card>
 
     <a-typography-title id="options-api" data-anchor="options-api" :level="2">ModalOptions</a-typography-title>

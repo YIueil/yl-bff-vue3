@@ -1,6 +1,4 @@
-@import url('./css/button.css');
-
-/*region 现代化的滚动条*/
+/* 现代化的滚动条*/
 /* 整个滚动条区域 */
 ::-webkit-scrollbar {
     width: 12px;  /* 垂直滚动条宽度 */
@@ -30,4 +28,3 @@
 ::-webkit-scrollbar-corner {
     background: #f1f1f1;
 }
-/*endregion*/

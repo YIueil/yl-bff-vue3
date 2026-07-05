@@ -1,30 +1,38 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 const basicTab = ref<'preview' | 'code'>('preview')
 
-const baseSource = `<button class="button button-primary">主要按钮</button>
-<button class="button button-danger">警告</button>
-<button class="button button-outline">边框</button>
-<button class="button button-ghost">幽灵</button>`
+const typeSource = `<a-button type="primary">主要按钮</a-button>
+<a-button type="danger">危险按钮</a-button>
+<a-button>默认按钮</a-button>
+<a-button type="dashed">虚线按钮</a-button>
+<a-button type="link">链接按钮</a-button>
+<a-button type="text">文字按钮</a-button>`
 
-const sizeSource = `<button class="button button-primary button-large">大</button>
-<button class="button button-primary">标准</button>
-<button class="button button-primary button-small">小</button>`
+const sizeSource = `<a-button type="primary" size="large">大</a-button>
+<a-button type="primary" size="middle">中</a-button>
+<a-button type="primary" size="small">小</a-button>`
+
+const stateSource = `<a-button type="primary" disabled>禁用</a-button>
+<a-button type="primary" loading>加载中</a-button>
+<a-button type="primary" block>块级按钮</a-button>`
 
 const apiColumns = [
-  { title: '修饰类', dataIndex: 'modifier', key: 'modifier', width: 220 },
-  { title: '类型', dataIndex: 'kind', key: 'kind', width: 120 },
+  { title: '属性', dataIndex: 'name', key: 'name', width: 140 },
+  { title: '类型', dataIndex: 'type', key: 'type', width: 220 },
+  { title: '默认值', dataIndex: 'default', key: 'default', width: 120 },
   { title: '说明', dataIndex: 'description', key: 'description' }
 ]
 
 const apiRows = [
-  { key: 'primary', modifier: 'button-primary', kind: '视觉', description: '主色调，蓝色背景白色文字，用于主操作' },
-  { key: 'danger', modifier: 'button-danger', kind: '视觉', description: '警示色调，红色背景，用于破坏性操作' },
-  { key: 'outline', modifier: 'button-outline', kind: '视觉', description: '透明背景带边框，用于次要操作' },
-  { key: 'ghost', modifier: 'button-ghost', kind: '视觉', description: '透明背景无边框，常用于工具栏' },
-  { key: 'large', modifier: 'button-large', kind: '尺寸', description: '加大尺寸，常用于首屏 CTA' },
-  { key: 'small', modifier: 'button-small', kind: '尺寸', description: '缩小尺寸，常用于密集列表/工具条' }
+  { key: 'type', name: 'type', type: "'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'danger'", default: "'default'", description: '按钮类型，决定视觉风格' },
+  { key: 'size', name: 'size', type: "'large' | 'middle' | 'small'", default: "'middle'", description: '按钮尺寸' },
+  { key: 'disabled', name: 'disabled', type: 'boolean', default: 'false', description: '是否禁用' },
+  { key: 'loading', name: 'loading', type: 'boolean | { delay: number }', default: 'false', description: '加载状态，可设 delay 防止闪烁' },
+  { key: 'block', name: 'block', type: 'boolean', default: 'false', description: '块级按钮，宽度撑满父容器' },
+  { key: 'shape', name: 'shape', type: "'default' | 'circle' | 'round'", default: "'default'", description: '按钮形状' },
+  { key: 'href', name: 'href', type: 'string', default: '—', description: '点击跳转链接，渲染为 <a>' },
+  { key: 'icon', name: 'icon', type: 'VNode | () => VNode', default: '—', description: '按钮图标，建议使用 @ant-design/icons-vue' },
+  { key: 'onClick', name: '@click', type: '(event) => void', default: '—', description: '点击事件回调' }
 ]
 </script>
 
@@ -34,8 +42,7 @@ const apiRows = [
       <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 按钮</a-typography-paragraph>
       <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">按钮 Button</a-typography-title>
       <a-typography-paragraph class="doc-page-summary">
-        基于 <code>.button</code> 基类的轻量按钮样式，通过修饰类组合视觉与尺寸。
-        与 antd 按钮（<code>&lt;a-button&gt;</code>）并存使用，按需选用。
+        基于 antd-vue <code>&lt;a-button&gt;</code> 的统一按钮组件，支持多种 type / size / shape / loading 等。
       </a-typography-paragraph>
     </header>
 
@@ -44,22 +51,23 @@ const apiRows = [
       show-icon
       class="doc-page-alert"
       message="何时使用 / 何时不用"
-      description="仅需要简单静态样式时使用自研 button；需要 loading / disabled / icon / 复杂尺寸时使用 antd <a-button>。"
+      description="所有按钮统一使用 a-button；如需 loading / disabled / icon / 复杂尺寸，使用 a-button 的对应 props。"
     />
 
-    <a-typography-title id="basic" data-anchor="basic" :level="2">基础示例</a-typography-title>
+    <a-typography-title id="type" data-anchor="type" :level="2">类型</a-typography-title>
     <a-tabs v-model:active-key="basicTab">
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-preview">
-          <button class="button button-primary">主要按钮</button>
-          <button class="button button-danger">警告</button>
-          <button class="button button-outline">边框</button>
-          <button class="button button-ghost">幽灵</button>
-          <button>原始</button>
+          <a-button type="primary">主要按钮</a-button>
+          <a-button type="danger">危险按钮</a-button>
+          <a-button>默认按钮</a-button>
+          <a-button type="dashed">虚线按钮</a-button>
+          <a-button type="link">链接按钮</a-button>
+          <a-button type="text">文字按钮</a-button>
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ baseSource }}</code></pre>
+        <pre class="doc-pre"><code>{{ typeSource }}</code></pre>
       </a-tab-pane>
     </a-tabs>
 
@@ -67,9 +75,9 @@ const apiRows = [
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-preview">
-          <button class="button button-primary button-large">大</button>
-          <button class="button button-primary">标准</button>
-          <button class="button button-primary button-small">小</button>
+          <a-button type="primary" size="large">大</a-button>
+          <a-button type="primary" size="middle">中</a-button>
+          <a-button type="primary" size="small">小</a-button>
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
@@ -77,9 +85,24 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
+    <a-typography-title id="state" data-anchor="state" :level="2">状态</a-typography-title>
+    <a-tabs>
+      <a-tab-pane key="preview" tab="预览">
+        <a-space>
+          <a-button type="primary" disabled>禁用</a-button>
+          <a-button type="primary" loading>加载中</a-button>
+          <a-button type="primary" block>块级按钮</a-button>
+        </a-space>
+      </a-tab-pane>
+      <a-tab-pane key="code" tab="代码">
+        <pre class="doc-pre"><code>{{ stateSource }}</code></pre>
+      </a-tab-pane>
+    </a-tabs>
+
     <a-typography-title id="api" data-anchor="api" :level="2">API</a-typography-title>
     <a-typography-paragraph>
-      通过组合修饰类实现样式，无独立 props API。
+      完整 API 见
+      <a href="https://www.antdv.com/components/button-cn" target="_blank">antd-vue Button 文档</a>。
     </a-typography-paragraph>
     <a-table
       :columns="apiColumns"
@@ -92,9 +115,8 @@ const apiRows = [
     <a-typography-title id="links" data-anchor="links" :level="2">相关链接</a-typography-title>
     <a-typography-paragraph>
       <ul>
-        <li><code>src/assets/css/button.css</code> — 修饰类实现源码</li>
-        <li><code>src/assets/main.css</code> — 全局样式入口</li>
         <li><RouterLink to="/components/icon">图标文档</RouterLink>（按钮内图标组合）</li>
+        <li><RouterLink to="/components/modal">Modal 文档</RouterLink>（footer 按钮事件）</li>
       </ul>
     </a-typography-paragraph>
   </main>

@@ -6,6 +6,7 @@ import {
   isVNode,
   onBeforeUnmount,
   onMounted,
+  resolveComponent,
   type ComponentPublicInstance,
   type VNode
 } from 'vue'
@@ -63,20 +64,21 @@ const renderFooter = (modalEntry: ModalObject): VNode | null => {
   }
   if (Array.isArray(footer)) {
     return h(
-      'div',
+      resolveComponent('a-space'),
+      { size: 'small' },
       {
-        class: 'modal-footer-container'
-      },
-      footer.map((button) =>
-        h(
-          'button',
-          {
-            class: ['modal-btn', `modal-btn-${button.type || 'default'}`],
-            onClick: () => Modal.onEvent(modalEntry.key, button.eventName, onEvent)
-          },
-          button.name
-        )
-      )
+        default: () =>
+          footer.map((button) =>
+            h(
+              resolveComponent('a-button'),
+              {
+                type: button.type || 'default',
+                onClick: () => Modal.onEvent(modalEntry.key, button.eventName, onEvent)
+              },
+              { default: () => button.name }
+            )
+          )
+      }
     )
   }
   return isVNode(footer) ? footer : h(footer)
