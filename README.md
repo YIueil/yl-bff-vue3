@@ -20,6 +20,9 @@ pnpm run dev
 ```
 
 ## 2 框架功能
+
+- [ ] 编写图标使用指南组件，详细展示在线、离线按需、自定义单色与多色图标的使用方式。参见 [图标使用指南组件计划](docs/icon-usage-guide-component.md)。
+
 ### 2.1 Iconify 组件集成
 > [Iconify](https://icon-sets.iconify.design) 是一个集成了大量icon的开源图标项目。
 >
