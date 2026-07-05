@@ -147,6 +147,14 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
       </a-layout-sider>
 
       <a-layout-content class="doc-content">
+        <div ref="scrollContainer" class="doc-scroll">
+          <RouterView v-slot="{ Component, route: childRoute }">
+            <component :is="Component" :key="childRoute.fullPath" />
+          </RouterView>
+        </div>
+      </a-layout-content>
+
+      <aside class="doc-toc">
         <div class="doc-anchor-wrap">
           <a-anchor
             v-if="anchorItems.length > 0"
@@ -157,13 +165,7 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
           />
           <div v-else class="doc-anchor-empty">本页无目录</div>
         </div>
-
-        <div ref="scrollContainer" class="doc-scroll">
-          <RouterView v-slot="{ Component, route: childRoute }">
-            <component :is="Component" :key="childRoute.fullPath" />
-          </RouterView>
-        </div>
-      </a-layout-content>
+      </aside>
     </a-layout>
   </a-layout>
 </template>
@@ -381,17 +383,22 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
   border-bottom: 1px solid var(--doc-line);
 }
 
+.doc-toc {
+  flex: 0 0 220px;
+  height: 100%;
+  padding: 24px 16px 24px 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--doc-surface-soft);
+  scrollbar-gutter: stable;
+}
+
 .doc-anchor-wrap {
-  position: sticky;
-  top: 0;
-  z-index: 5;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   min-height: 48px;
-  padding: 8px 24px;
+  padding: 8px 8px 8px 24px;
   overflow-x: auto;
-  background: var(--doc-surface);
-  border-bottom: 1px solid var(--doc-line);
 }
 
 .doc-anchor {
@@ -400,6 +407,7 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 }
 
 .doc-anchor :deep(.ant-anchor) {
+  position: static;
   max-width: 100%;
 }
 
@@ -410,6 +418,12 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 
 .doc-scroll {
   padding: 24px 32px 64px;
+}
+
+@media (max-width: 1280px) {
+  .doc-toc {
+    display: none;
+  }
 }
 
 @media (max-width: 992px) {
@@ -432,10 +446,6 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 
   .doc-scroll {
     padding: 16px 16px 48px;
-  }
-
-  .doc-anchor-wrap {
-    padding: 8px 16px;
   }
 }
 </style>
