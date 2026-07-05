@@ -6,12 +6,23 @@ import type {
   ModalInstance,
   ModalManagerInterface,
   ModalObject,
-  ModalOptions
+  ModalOptions,
+  ModalTrustedHtml
 } from '@/types/components/modal'
 // 第三方拖拽组件
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 //default styles
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
+
+const trustedHtmlBrand = Symbol('ModalTrustedHtml')
+
+const isModalTrustedHtml = (value: unknown): value is ModalTrustedHtml => {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    (value as Record<PropertyKey, unknown>)[trustedHtmlBrand] === true
+  )
+}
 
 export class ModalManager implements ModalManagerInterface {
   private static instance: ModalManager
@@ -23,6 +34,13 @@ export class ModalManager implements ModalManagerInterface {
       ModalManager.instance = new ModalManager()
     }
     return ModalManager.instance
+  }
+
+  public trustedHtml(html: string): ModalTrustedHtml {
+    return Object.freeze({
+      html,
+      [trustedHtmlBrand]: true
+    }) as unknown as ModalTrustedHtml
   }
 
   public open<T = any>(options: ModalOptions<T>): ModalInstance {
@@ -56,11 +74,14 @@ export class ModalManager implements ModalManagerInterface {
         return null
       }
       if (typeof title === 'string') {
+        return h('div', title)
+      }
+      if (isModalTrustedHtml(title)) {
         return h('div', {
-          innerHTML: title
+          innerHTML: title.html
         })
       }
-      return h(title)
+      return title
     }
     const renderBody = (): VNode => {
       // 为渲染一个空 div 节点
@@ -72,11 +93,14 @@ export class ModalManager implements ModalManagerInterface {
         return component
       }
 
-      if (typeof component === 'string') {
-        // 使用 h() 函数进行渲染
+      if (isModalTrustedHtml(component)) {
         return h('div', {
-          innerHTML: component
+          innerHTML: component.html
         })
+      }
+
+      if (typeof component === 'string') {
+        return h('div', component)
       }
 
       // 处理 h() 渲染函数

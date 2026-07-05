@@ -79,9 +79,8 @@ const openModalByFunction2 = function () {
     component: () => h(`div`, {
       style: {
         background: 'green'
-      },
-      innerHTML: '第二个API窗体, 通过h函数渲染'
-    })
+      }
+    }, '第二个API窗体, 通过h函数渲染')
   })
 }
 
@@ -105,6 +104,16 @@ const openModalByFunction4 = function () {
   })
 }
 
+const openTrustedHtmlModal = function () {
+  Modal.open({
+    key: '可信HTML API窗体',
+    title: Modal.trustedHtml('<span style="color: green">可信 HTML 标题</span>'),
+    component: Modal.trustedHtml(
+      '<div style="background: green; color: white">通过显式可信 HTML API 渲染的内容</div>'
+    )
+  })
+}
+
 </script>
 
 <template>
@@ -116,6 +125,7 @@ const openModalByFunction4 = function () {
   <button @click="openModalByFunction2">API弹出Modal2</button>
   <button @click="openModalByFunction3">API弹出Modal3</button>
   <button @click="openModalByFunction4">API弹出Modal4</button>
+  <button @click="openTrustedHtmlModal">API弹出可信HTML Modal</button>
   <button @click="closeAll">关闭所有</button>
   <YlModal :key="modelKey" :visible="showModal" :show-footer="showFooter" :show-mask="true" @ok="showFooter = !showFooter" @close="showModal = false; modelKey++;">
     <template v-slot:header>

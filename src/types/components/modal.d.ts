@@ -1,10 +1,19 @@
 import { type App, type Component, type VNode } from 'vue'
 import type { ComponentWithUnknownProps } from '@/types'
 
+declare const modalTrustedHtmlBrand: unique symbol
+
+export type ModalTrustedHtml = {
+  readonly html: string
+  readonly [modalTrustedHtmlBrand]: true
+}
+
 export class ModalManagerInterface {
   public getModal(key: string | number): ModalObject | undefined
   public listModal(): IterableIterator<ModalObject>
   public getModalEntryMap()
+  /** 标记可信 HTML 以跳过文本转义；该方法不会清洗传入内容。 */
+  public trustedHtml(html: string): ModalTrustedHtml
   public open<T = any>(options: ModalOptions<T>): ModalInstance
   public close(key: string | number): void
   public closeAll(): void
@@ -60,8 +69,8 @@ export type ModalOptions<T = any> = {
   draggable?: boolean
 
   // 主体内容
-  title?: string | VNode
-  component?: string | Component | (() => VNode) // 支持组件或渲染函数
+  title?: string | VNode | ModalTrustedHtml
+  component?: string | Component | VNode | (() => VNode) | ModalTrustedHtml
   footer?: Component | VNode | ButtonAndEvent[]
 
   // 组件props

@@ -128,8 +128,8 @@ Modal 分为两层：
 
 `Modal.open()` 的有效字段以 `src/types/components/modal.d.ts` 中的 `ModalOptions` 为准：
 
-- `title`：字符串或 VNode。
-- `component`：字符串、组件、VNode 或返回 VNode 的函数。
+- `title`：按文本渲染的字符串、VNode，或 `Modal.trustedHtml()` 返回的可信 HTML。
+- `component`：按文本渲染的字符串、组件、VNode、返回 VNode 的函数，或 `Modal.trustedHtml()` 返回的可信 HTML。
 - `componentProps`：传给内容组件的 props。
 - `footer`：组件、VNode，或按钮数组。
 - `on`：以按钮的 `eventName` 为键的回调 Map。
@@ -146,7 +146,7 @@ Modal 分为两层：
 - `hide()` 只切换 `v-show`，保留组件状态；`close()` 会 unmount 并从 Map 删除。
 - `YlModal` 中的部分本地状态只在初始化时读取 props，运行时修改对应 prop 不一定同步。现有声明式示例通过修改 `key` 强制重建。
 - 默认尺寸为 `900 x 560`，移动端和窗口尺寸变化尚未完善。
-- 字符串标题和字符串内容通过 `innerHTML` 渲染。不得把未经清洗的用户输入直接传入，以免产生 XSS。
+- 字符串标题和字符串内容默认按文本渲染。仅可信静态内容可使用 `Modal.trustedHtml()` 显式按 HTML 渲染；该方法不执行清洗，不得传入未经可靠清洗的用户输入。
 
 修改 Modal 时至少手工覆盖：声明式打开/关闭、API 打开、重复 key、隐藏后重显、关闭全部、遮罩点击、footer 自定义事件、最小化/恢复、最大化/恢复和内容组件 expose 调用。
 
