@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
 import DocLayout from '@/layouts/DocLayout.vue'
 
 const router = createRouter({
@@ -7,9 +6,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-      meta: { title: '首页' }
+      redirect: '/components'
     },
     {
       path: '/components',

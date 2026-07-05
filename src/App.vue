@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import YlModalHost from '@/components/Modal/YlModalHost.vue'
 
 const baseurl = import.meta.env.VITE_API_BASE_URL
@@ -7,22 +7,7 @@ const baseurl = import.meta.env.VITE_API_BASE_URL
 
 <template>
   <header>
-    {{ baseurl }}
-    <div class="wrapper">
-      <nav>
-        <a-button type="primary">
-          <RouterLink to="/components">组件文档</RouterLink>
-        </a-button>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/components/icon">Icon</RouterLink>
-        <RouterLink to="/components/draggable">Draggable</RouterLink>
-        <RouterLink to="/components/drag-resize">DragResize</RouterLink>
-        <RouterLink to="/components/modal">Modal</RouterLink>
-        <RouterLink to="/components/button">Button</RouterLink>
-        <RouterLink to="/components/echarts">Echarts</RouterLink>
-        <RouterLink to="/components/about">About</RouterLink>
-      </nav>
-    </div>
+    <p class="baseurl-hint">VITE_API_BASE_URL: {{ baseurl }}</p>
   </header>
 
   <RouterView />
@@ -30,12 +15,10 @@ const baseurl = import.meta.env.VITE_API_BASE_URL
 </template>
 
 <style scoped>
-nav {
-  display: flex;
-  flex-direction: column;
-}
-
-nav a {
-  margin: 10px;
+.baseurl-hint {
+  margin: 12px 16px;
+  color: #5d6678;
+  font-size: 12px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
 }
 </style>
