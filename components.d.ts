@@ -7,7 +7,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    IconUsageGuide: typeof import('./src/components/IconUsageGuide.vue')['default']
+    IMdiCheckCircleOutline: typeof import('~icons/mdi/check-circle-outline')['default']
     IMdiClose: typeof import('~icons/mdi/close')['default']
+    IMdiDownload: typeof import('~icons/mdi/download')['default']
     IMdiHome: typeof import('~icons/mdi/home')['default']
     IMdiMinus: typeof import('~icons/mdi/minus')['default']
     IMdiResize: typeof import('~icons/mdi/resize')['default']
