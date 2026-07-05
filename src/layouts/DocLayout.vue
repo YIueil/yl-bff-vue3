@@ -147,18 +147,16 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
       </a-layout-sider>
 
       <a-layout-content class="doc-content">
-        <a-affix :offset-top="0" class="doc-affix">
-          <div class="doc-anchor-wrap">
-            <a-anchor
-              v-if="anchorItems.length > 0"
-              :items="anchorItems"
-              :target-offset="64"
-              class="doc-anchor"
-              @click="handleAnchorClick"
-            />
-            <div v-else class="doc-anchor-empty">本页无目录</div>
-          </div>
-        </a-affix>
+        <div class="doc-anchor-wrap">
+          <a-anchor
+            v-if="anchorItems.length > 0"
+            :items="anchorItems"
+            :target-offset="64"
+            class="doc-anchor"
+            @click="handleAnchorClick"
+          />
+          <div v-else class="doc-anchor-empty">本页无目录</div>
+        </div>
 
         <div ref="scrollContainer" class="doc-scroll">
           <RouterView v-slot="{ Component, route: childRoute }">
@@ -275,13 +273,20 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 }
 
 .doc-body {
-  min-height: calc(100vh - 64px);
+  display: flex;
+  height: calc(100vh - 64px);
+  overflow: hidden;
   background: var(--doc-surface-soft);
 }
 
 .doc-sider {
+  flex: 0 0 220px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: var(--doc-surface);
   border-right: 1px solid var(--doc-line);
+  scrollbar-gutter: stable;
 }
 
 .doc-nav {
@@ -360,8 +365,14 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 
 .doc-content {
   position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
   padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: var(--doc-surface-soft);
+  scrollbar-gutter: stable;
 }
 
 .doc-affix {
@@ -371,11 +382,16 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 }
 
 .doc-anchor-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 5;
   display: flex;
   align-items: center;
   min-height: 48px;
   padding: 8px 24px;
   overflow-x: auto;
+  background: var(--doc-surface);
+  border-bottom: 1px solid var(--doc-line);
 }
 
 .doc-anchor {
