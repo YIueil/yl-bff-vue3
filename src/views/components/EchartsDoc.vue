@@ -109,12 +109,12 @@ const apiRows = [
 <template>
   <main class="doc-page">
     <header class="doc-page-hero">
-      <p class="doc-page-eyebrow">组件文档 / 图表</p>
-      <h1 data-anchor="overview" class="doc-page-title">图表 ECharts</h1>
-      <p class="doc-page-summary">
+      <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 图表</a-typography-paragraph>
+      <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">图表 ECharts</a-typography-title>
+      <a-typography-paragraph class="doc-page-summary">
         按需引入 ECharts，统一在 <code>core/echarts-import.ts</code> 注册；
         实例初始化、容器 resize、卸载 dispose 全部按生命周期管理。
-      </p>
+      </a-typography-paragraph>
     </header>
 
     <a-alert
@@ -125,24 +125,24 @@ const apiRows = [
       description="项目内所有图表都走 @/core/echarts-import 统一注册；禁止页面直接 import 完整 echarts 包，否则包体会显著膨胀。"
     />
 
-    <a-typography-title :id="undefined" data-anchor="basic" :level="2">基础示例</a-typography-title>
+    <a-typography-title id="basic" data-anchor="basic" :level="2">基础示例</a-typography-title>
     <a-card class="doc-chart-card">
       <div ref="echartsDom" class="echartsContainer"></div>
     </a-card>
 
-    <a-typography-title :id="undefined" data-anchor="on-demand" :level="2">按需注册</a-typography-title>
+    <a-typography-title id="on-demand" data-anchor="on-demand" :level="2">按需注册</a-typography-title>
     <a-typography-paragraph>
       所有按需模块集中在 <code>src/core/echarts-import.ts</code> 注册，不要在页面中改为导入完整 <code>echarts</code> 包。
     </a-typography-paragraph>
     <pre class="doc-pre"><code>{{ source }}</code></pre>
 
-    <a-typography-title :id="undefined" data-anchor="lifecycle" :level="2">生命周期</a-typography-title>
+    <a-typography-title id="lifecycle" data-anchor="lifecycle" :level="2">生命周期</a-typography-title>
     <a-typography-paragraph>
       DOM mounted 后初始化，<code>ResizeObserver</code> 监听容器尺寸，unmounted 前 <code>dispose()</code>。
     </a-typography-paragraph>
     <pre class="doc-pre"><code>{{ lifecycleSource }}</code></pre>
 
-    <a-typography-title :id="undefined" data-anchor="api" :level="2">已注册模块</a-typography-title>
+    <a-typography-title id="api" data-anchor="api" :level="2">已注册模块</a-typography-title>
     <a-table
       :columns="apiColumns"
       :data-source="apiRows"
@@ -151,7 +151,7 @@ const apiRows = [
       class="doc-table"
     />
 
-    <a-typography-title :id="undefined" data-anchor="links" :level="2">相关链接</a-typography-title>
+    <a-typography-title id="links" data-anchor="links" :level="2">相关链接</a-typography-title>
     <a-typography-paragraph>
       <ul>
         <li><code>src/core/echarts-import.ts</code> — 注册入口</li>

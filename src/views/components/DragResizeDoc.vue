@@ -56,11 +56,11 @@ const apiRows = [
 <template>
   <main class="doc-page">
     <header class="doc-page-hero">
-      <p class="doc-page-eyebrow">组件文档 / 元素拖拽缩放</p>
-      <h1 data-anchor="overview" class="doc-page-title">元素拖拽缩放 DragResize</h1>
-      <p class="doc-page-summary">
+      <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 元素拖拽缩放</a-typography-paragraph>
+      <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">元素拖拽缩放 DragResize</a-typography-title>
+      <a-typography-paragraph class="doc-page-summary">
         基于 <code>vue3-draggable-resizable</code> 的单元素拖拽与缩放，常用于面板、便签、可视化编辑器。
-      </p>
+      </a-typography-paragraph>
     </header>
 
     <a-alert
@@ -71,7 +71,7 @@ const apiRows = [
       description="单元素需要拖拽 + 缩放 + 边界限制时使用；列表排序请用 vue-draggable-plus。"
     />
 
-    <a-typography-title :id="undefined" data-anchor="basic" :level="2">基础示例</a-typography-title>
+    <a-typography-title id="basic" data-anchor="basic" :level="2">基础示例</a-typography-title>
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-preview">
@@ -110,7 +110,7 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
-    <a-typography-title :id="undefined" data-anchor="api" :level="2">API 摘要</a-typography-title>
+    <a-typography-title id="api" data-anchor="api" :level="2">API 摘要</a-typography-title>
     <a-table
       :columns="apiColumns"
       :data-source="apiRows"
@@ -119,7 +119,7 @@ const apiRows = [
       class="doc-table"
     />
 
-    <a-typography-title :id="undefined" data-anchor="links" :level="2">相关链接</a-typography-title>
+    <a-typography-title id="links" data-anchor="links" :level="2">相关链接</a-typography-title>
     <a-typography-paragraph>
       <ul>
         <li><RouterLink to="/components/draggable">列表拖拽</RouterLink></li>

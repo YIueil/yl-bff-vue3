@@ -39,11 +39,11 @@ const apiRows = [
 <template>
   <main class="doc-page">
     <header class="doc-page-hero">
-      <p class="doc-page-eyebrow">组件文档 / 列表拖拽</p>
-      <h1 data-anchor="overview" class="doc-page-title">列表拖拽 Draggable</h1>
-      <p class="doc-page-summary">
+      <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 列表拖拽</a-typography-paragraph>
+      <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">列表拖拽 Draggable</a-typography-title>
+      <a-typography-paragraph class="doc-page-summary">
         基于 <code>vue-draggable-plus</code> 的列表拖拽排序，支持分组、动画与拖拽手柄。
-      </p>
+      </a-typography-paragraph>
     </header>
 
     <a-alert
@@ -54,7 +54,7 @@ const apiRows = [
       description="需要对一组同类元素进行排序（如看板、列表管理）时使用；跨容器拖拽或文件拖拽请用其它库。"
     />
 
-    <a-typography-title :id="undefined" data-anchor="basic" :level="2">基础示例</a-typography-title>
+    <a-typography-title id="basic" data-anchor="basic" :level="2">基础示例</a-typography-title>
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-preview">
@@ -73,7 +73,7 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
-    <a-typography-title :id="undefined" data-anchor="api" :level="2">API 摘要</a-typography-title>
+    <a-typography-title id="api" data-anchor="api" :level="2">API 摘要</a-typography-title>
     <a-typography-paragraph>
       完整 API 请参考
       <a href="https://vue-draggable-plus.pages.dev" target="_blank">vue-draggable-plus 官方文档</a>。
@@ -86,7 +86,7 @@ const apiRows = [
       class="doc-table"
     />
 
-    <a-typography-title :id="undefined" data-anchor="links" :level="2">相关链接</a-typography-title>
+    <a-typography-title id="links" data-anchor="links" :level="2">相关链接</a-typography-title>
     <a-typography-paragraph>
       <ul>
         <li><RouterLink to="/components/drag-resize">元素拖拽缩放</RouterLink></li>

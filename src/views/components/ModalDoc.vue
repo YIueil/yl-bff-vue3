@@ -200,12 +200,12 @@ const apiRows = [
 <template>
   <main class="doc-page">
     <header class="doc-page-hero">
-      <p class="doc-page-eyebrow">组件文档 / 模态框</p>
-      <h1 data-anchor="overview" class="doc-page-title">模态框 Modal</h1>
-      <p class="doc-page-summary">
+      <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 模态框</a-typography-paragraph>
+      <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">模态框 Modal</a-typography-title>
+      <a-typography-paragraph class="doc-page-summary">
         三层结构：<code>YlModal</code>（表现层）+ <code>YlModalHost</code>（统一渲染器）+ <code>ModalManager</code>（单例）。
         支持声明式、API 调用、选项式调用三种方式，默认文本渲染，可信 HTML 需走 <code>trustedHtml</code>。
-      </p>
+      </a-typography-paragraph>
     </header>
 
     <a-alert
@@ -224,7 +224,7 @@ const apiRows = [
       description="字符串 title / component 默认按文本渲染。trustedHtml() 不做清洗，禁止传入未清洗的用户输入。"
     />
 
-    <a-typography-title :id="undefined" data-anchor="declarative" :level="2">声明式</a-typography-title>
+    <a-typography-title id="declarative" data-anchor="declarative" :level="2">声明式</a-typography-title>
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-actions">
@@ -254,7 +254,7 @@ const apiRows = [
       </template>
     </YlModal>
 
-    <a-typography-title :id="undefined" data-anchor="api" :level="2">API 调用</a-typography-title>
+    <a-typography-title id="api" data-anchor="api" :level="2">API 调用</a-typography-title>
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-actions">
@@ -270,7 +270,7 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
-    <a-typography-title :id="undefined" data-anchor="options" :level="2">选项式 API</a-typography-title>
+    <a-typography-title id="options" data-anchor="options" :level="2">选项式 API</a-typography-title>
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-actions">
@@ -282,7 +282,7 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
-    <a-typography-title :id="undefined" data-anchor="context" :level="2">主应用上下文</a-typography-title>
+    <a-typography-title id="context" data-anchor="context" :level="2">主应用上下文</a-typography-title>
     <a-typography-paragraph>
       动态 Modal 在主应用组件树中渲染（Host 位于 <code>App.vue</code>，不被嵌套路由卸载），
       因此内容组件可以直接访问 Router、Pinia、应用级 provide 和 <code>$modal</code>。
@@ -291,7 +291,7 @@ const apiRows = [
       <button class="button button-primary" @click="openContextProbe">验证主应用上下文</button>
     </a-card>
 
-    <a-typography-title :id="undefined" data-anchor="trusted" :level="2">可信 HTML</a-typography-title>
+    <a-typography-title id="trusted" data-anchor="trusted" :level="2">可信 HTML</a-typography-title>
     <a-alert type="warning" show-icon class="doc-page-alert" message="危险操作" description="trustedHtml() 不做清洗，禁止传入未清洗的用户输入。" />
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
@@ -304,7 +304,7 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
-    <a-typography-title :id="undefined" data-anchor="draggable" :level="2">拖拽缩放</a-typography-title>
+    <a-typography-title id="draggable" data-anchor="draggable" :level="2">拖拽缩放</a-typography-title>
     <a-typography-paragraph>
       通过 <code>draggable</code> / <code>resizable</code> 选项开启；resize handle 仅在右下角。
     </a-typography-paragraph>
@@ -312,7 +312,7 @@ const apiRows = [
       <button class="button button-primary" @click="openDraggableModal">弹出可拖拽缩放弹窗</button>
     </a-card>
 
-    <a-typography-title :id="undefined" data-anchor="options-api" :level="2">ModalOptions</a-typography-title>
+    <a-typography-title id="options-api" data-anchor="options-api" :level="2">ModalOptions</a-typography-title>
     <a-typography-paragraph>
       完整字段定义见 <code>src/types/components/modal.d.ts</code>。注意 <code>body</code> 与 <code>onClose</code> 不是合法字段，
       关闭请用 footer <code>eventName: 'close'</code> 或 <code>ModalInstance.close()</code>。
@@ -325,7 +325,7 @@ const apiRows = [
       class="doc-table"
     />
 
-    <a-typography-title :id="undefined" data-anchor="links" :level="2">相关链接</a-typography-title>
+    <a-typography-title id="links" data-anchor="links" :level="2">相关链接</a-typography-title>
     <a-typography-paragraph>
       <ul>
         <li><code>src/components/Modal/YlModal.vue</code> — 表现层</li>

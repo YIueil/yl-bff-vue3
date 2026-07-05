@@ -31,12 +31,12 @@ const apiRows = [
 <template>
   <main class="doc-page">
     <header class="doc-page-hero">
-      <p class="doc-page-eyebrow">组件文档 / 按钮</p>
-      <h1 data-anchor="overview" class="doc-page-title">按钮 Button</h1>
-      <p class="doc-page-summary">
+      <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 按钮</a-typography-paragraph>
+      <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">按钮 Button</a-typography-title>
+      <a-typography-paragraph class="doc-page-summary">
         基于 <code>.button</code> 基类的轻量按钮样式，通过修饰类组合视觉与尺寸。
         与 antd 按钮（<code>&lt;a-button&gt;</code>）并存使用，按需选用。
-      </p>
+      </a-typography-paragraph>
     </header>
 
     <a-alert
@@ -47,7 +47,7 @@ const apiRows = [
       description="仅需要简单静态样式时使用自研 button；需要 loading / disabled / icon / 复杂尺寸时使用 antd <a-button>。"
     />
 
-    <a-typography-title :id="undefined" data-anchor="basic" :level="2">基础示例</a-typography-title>
+    <a-typography-title id="basic" data-anchor="basic" :level="2">基础示例</a-typography-title>
     <a-tabs v-model:active-key="basicTab">
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-preview">
@@ -63,7 +63,7 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
-    <a-typography-title :id="undefined" data-anchor="size" :level="2">尺寸</a-typography-title>
+    <a-typography-title id="size" data-anchor="size" :level="2">尺寸</a-typography-title>
     <a-tabs>
       <a-tab-pane key="preview" tab="预览">
         <a-card class="doc-card-preview">
@@ -77,7 +77,7 @@ const apiRows = [
       </a-tab-pane>
     </a-tabs>
 
-    <a-typography-title :id="undefined" data-anchor="api" :level="2">API</a-typography-title>
+    <a-typography-title id="api" data-anchor="api" :level="2">API</a-typography-title>
     <a-typography-paragraph>
       通过组合修饰类实现样式，无独立 props API。
     </a-typography-paragraph>
@@ -89,7 +89,7 @@ const apiRows = [
       class="doc-table"
     />
 
-    <a-typography-title :id="undefined" data-anchor="links" :level="2">相关链接</a-typography-title>
+    <a-typography-title id="links" data-anchor="links" :level="2">相关链接</a-typography-title>
     <a-typography-paragraph>
       <ul>
         <li><code>src/assets/css/button.css</code> — 修饰类实现源码</li>

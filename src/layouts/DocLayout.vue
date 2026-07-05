@@ -448,4 +448,33 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
     padding: 16px 16px 48px;
   }
 }
+
+/* 覆盖各文档子页 hero 段：antd typography 默认 margin 会破坏紧凑排版 */
+:deep(.doc-page-hero .ant-typography) {
+  margin: 0;
+}
+
+:deep(.doc-page-eyebrow) {
+  color: var(--doc-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+:deep(.doc-page-title) {
+  margin-top: 8px !important;
+  color: var(--doc-ink);
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+:deep(.doc-page-summary) {
+  margin-top: 12px !important;
+  color: var(--doc-muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
 </style>

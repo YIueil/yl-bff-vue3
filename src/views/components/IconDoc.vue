@@ -5,12 +5,12 @@ import IconUsageGuide from '@/components/IconUsageGuide.vue'
 <template>
   <main class="doc-page icon-doc-page">
     <header class="doc-page-hero">
-      <p class="doc-page-eyebrow">组件文档 / 图标</p>
-      <h1 data-anchor="overview" class="doc-page-title">图标 Icon</h1>
-      <p class="doc-page-summary">
+      <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 图标</a-typography-paragraph>
+      <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">图标 Icon</a-typography-title>
+      <a-typography-paragraph class="doc-page-summary">
         本项目支持在线 Iconify、构建期离线组件和本地自定义图标。选择方式时主要考虑
         运行环境是否联网、图标名称是否需要动态切换，以及是否需要使用项目自己的 SVG。
-      </p>
+      </a-typography-paragraph>
     </header>
 
     <a-alert
@@ -21,7 +21,7 @@ import IconUsageGuide from '@/components/IconUsageGuide.vue'
       description="需要按字符串/变量动态切换图标名时优先使用 <Icon :icon='name' />；图标固定、希望构建产物自包含时使用 <i-mdi-home />；品牌或业务图标放入 src/assets/images/svg/single|muliti/ 后由 svg-json-generate 生成。"
     />
 
-    <a-typography-title :id="undefined" data-anchor="usage" :level="2">
+    <a-typography-title id="usage" data-anchor="usage" :level="2">
       使用指南
     </a-typography-title>
     <a-typography-paragraph>
@@ -32,7 +32,7 @@ import IconUsageGuide from '@/components/IconUsageGuide.vue'
       <IconUsageGuide />
     </section>
 
-    <a-typography-title :id="undefined" data-anchor="links" :level="2">
+    <a-typography-title id="links" data-anchor="links" :level="2">
       相关链接
     </a-typography-title>
     <a-typography-paragraph>

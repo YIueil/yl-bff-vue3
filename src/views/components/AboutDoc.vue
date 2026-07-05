@@ -42,15 +42,15 @@ const capabilities = [
 <template>
   <main class="doc-page">
     <header class="doc-page-hero">
-      <p class="doc-page-eyebrow">组件文档 / 关于</p>
-      <h1 data-anchor="overview" class="doc-page-title">关于 About</h1>
-      <p class="doc-page-summary">
+      <a-typography-paragraph class="doc-page-eyebrow">组件文档 / 关于</a-typography-paragraph>
+      <a-typography-title id="overview" data-anchor="overview" :level="1" class="doc-page-title">关于 About</a-typography-title>
+      <a-typography-paragraph class="doc-page-summary">
         yl-bff-vue3 是 YIueil 的 Vue 3 前端框架原型 / 演示集合，目的是以最小代价验证
         Iconify / Modal / ECharts / 拖拽等核心能力的集成方式。
-      </p>
+      </a-typography-paragraph>
     </header>
 
-    <a-typography-title :id="undefined" data-anchor="stack" :level="2">技术栈</a-typography-title>
+    <a-typography-title id="stack" data-anchor="stack" :level="2">技术栈</a-typography-title>
     <a-descriptions :column="2" bordered size="small" class="doc-desc">
       <a-descriptions-item label="框架">Vue 3.4 + TypeScript 5.4</a-descriptions-item>
       <a-descriptions-item label="构建">Vite 6.3</a-descriptions-item>
@@ -62,7 +62,7 @@ const capabilities = [
       <a-descriptions-item label="Node">20.14.5</a-descriptions-item>
     </a-descriptions>
 
-    <a-typography-title :id="undefined" data-anchor="capabilities" :level="2">能力索引</a-typography-title>
+    <a-typography-title id="capabilities" data-anchor="capabilities" :level="2">能力索引</a-typography-title>
     <a-list :data-source="capabilities" :bordered="true" class="doc-cap-list">
       <template #renderItem="{ item }">
         <a-list-item>
@@ -76,7 +76,7 @@ const capabilities = [
       </template>
     </a-list>
 
-    <a-typography-title :id="undefined" data-anchor="workflow" :level="2">开发约定</a-typography-title>
+    <a-typography-title id="workflow" data-anchor="workflow" :level="2">开发约定</a-typography-title>
     <a-typography-paragraph>
       修改运行时代码前请阅读 <code>AGENTS.md</code>：所有实现类任务先在 <code>docs/</code>
       写计划，由开发者亲自提交后切到 <code>.worktree/codex-*</code> 分支实施，
@@ -84,7 +84,7 @@ const capabilities = [
       完成后禁止自动合并，需先汇报。
     </a-typography-paragraph>
 
-    <a-typography-title :id="undefined" data-anchor="links" :level="2">相关链接</a-typography-title>
+    <a-typography-title id="links" data-anchor="links" :level="2">相关链接</a-typography-title>
     <a-typography-paragraph>
       <ul>
         <li><code>README.md</code> — 项目说明</li>
