@@ -43,6 +43,9 @@ import { Icon } from '@iconify/vue'
 
 #### 自定义SVG图标
 [svg-import.ts](src/core/svg-import.ts)这个目录下的这个文件中，通过iconify中提供的方法添加了本地图标。
+
+- [ ] 将 SVG 转 Iconify JSON 的流程改为可复现的 pnpm 脚本，增加明确的 TypeScript runner，并基于脚本文件位置解析输入输出路径。参见 [SVG 转 Iconify JSON 可复现流程计划](docs/reproducible-svg-iconify-generation.md)。
+
 1. 添加svg到@/assets/images/svg/目录下。
 2. 通过node执行json生成脚本[svg-json-generate.ts](src/scripts/svg-json-generate.ts)。
 3. 由svg-import.ts中的代码引入。
