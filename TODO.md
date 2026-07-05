@@ -8,7 +8,8 @@
 - [X] 迁移 ESLint 9 配置或锁定兼容版本，移除失效的 `--ignore-path` 参数，确保 `pnpm run lint` 可以执行且不会产生非预期批量修改。
 - [X] 修复 API Modal 的关闭链路：遮罩点击关闭。
 - [X] 消除 Modal 字符串标题和内容直接使用 `innerHTML` 的 XSS 风险；默认按文本渲染，仅为可信内容提供显式 HTML API 或可靠的清洗流程。
-- [ ] 修正 `ModalViewOptions.vue` 与 `ModalOptions` 的接口偏差，移除无效的 `body`、`onClose` 用法，统一为 `component` 和 `on` 事件模型。
+- [X] 修正 `ModalViewOptions.vue` 与 `ModalOptions` 的接口偏差；选项式示例已使用 `component`
+  和 `componentProps`，不再使用未声明的 `body`、`onClose`。
 - [ ] 完善动态 Modal 的挂载机制，保证多个窗口拥有独立、明确的挂载节点，并在关闭和 `closeAll()` 后完整卸载 app、DOM 与事件资源。
 - [ ] 修复 ECharts 生命周期管理：在 mounted 后初始化，在 unmounted 前 `dispose()`，响应容器尺寸变化，移除当前不可靠的 `setTimeout()` 初始化。
 

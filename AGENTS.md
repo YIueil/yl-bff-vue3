@@ -124,7 +124,8 @@ Modal 分为两层：
 
 - 声明式：直接使用自动注册的 `<YlModal>`，通过 `header`、`body`、`footer` 插槽传内容。
 - 组合式：导入 `Modal`，或使用 `inject<ModalManagerInterface>('modal')`。
-- 选项式：通过 `this.$modal` 调用；当前类型扩展存在上述基线问题。
+- 选项式：通过 `this.$modal` 调用；`ModalViewOptions.vue` 已使用 `component` 和
+  `componentProps` 传递内容及其 props。
 
 `Modal.open()` 的有效字段以 `src/types/components/modal.d.ts` 中的 `ModalOptions` 为准：
 
@@ -132,10 +133,12 @@ Modal 分为两层：
 - `component`：按文本渲染的字符串、组件、VNode、返回 VNode 的函数，或 `Modal.trustedHtml()` 返回的可信 HTML。
 - `componentProps`：传给内容组件的 props。
 - `footer`：组件、VNode，或按钮数组。
-- `on`：以按钮的 `eventName` 为键的回调 Map。
+- `on`：以 footer 按钮的 `eventName` 为键的回调 Map；自定义事件统一通过
+  `eventName` 和 `on` 配对处理。
 - 窗口选项包括 `showMask`、`showHeader`、`showFooter`、`clickMaskClose`、`isTeleport`、`parent`、`resizable`、`draggable`。
 
-不要仿照 `ModalViewOptions.vue` 使用未声明的 `body` 或 `onClose` 字段；当前管理器不会消费它们。默认关闭事件应使用 footer 的 `eventName: 'close'`，或在回调中调用 `ModalInstance.close()`。
+`body` 和 `onClose` 不属于 `ModalOptions`，当前管理器不会消费它们。默认关闭事件应使用
+footer 的 `eventName: 'close'`，或在 `on` 回调中调用 `ModalInstance.close()`。
 
 ### 实现约束
 
