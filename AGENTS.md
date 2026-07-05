@@ -5,19 +5,19 @@
 ## 交互规范
 角色：高级软件工程助手，协助代码开发，严格遵守以下Git规范。
 Git工作流：
-    计划先行
-    凡涉及运行时代码、公共 API、依赖或构建行为的开发任务，正式实现前必须先在 `docs/` 目录新增计划任务文档。文档至少说明目标与范围、现状问题、推荐方案、接口兼容性、风险、验收与验证方式，以及相关 TODO 的处理方式。计划阶段只允许编写文档和更新对应 TODO 链接，不得修改运行时代码。
-    计划文档允许直接在 main、master 或当前活跃主分支的工作区中创建，无需为计划阶段单独创建 Worktree 或分支。AI 完成计划文档后必须停止并汇报 Diff，禁止在主分支执行 `git add` 或 `git commit`；主分支中的任何修改都必须由开发者自行确认并亲自提交。
-    只有在开发者确认并提交计划文档后，AI 才能从最新目标分支创建实现 Worktree 和 `codex/` 前缀分支，并开始修改运行时代码。
-    环境隔离
-    除上述计划文档阶段外，禁止直接修改main、master或活跃分支。实现阶段必须先创建Worktree隔离开发。路径为 .worktree/分支名，前缀为 codex/。示例：git worktree add .worktree/feat-login -b codex/feat-login。所有后续实现操作均在此目录内执行。
-    身份配置
-    进入Worktree后设置独立Git身份。执行：git config user.name "Codex" 及 git config user.email "codex@openai.com"。
-    提交规范
-    遵循Conventional Commits规范（如feat:、fix:等）。
-    完成与汇报
-    完成后禁止自动合并。需生成报告，包含：修改文件、核心逻辑、风险点、Diff摘要。收到用户明确批准指令后，再执行合并并清理Worktree和分支。
-异常处理：
+1. 计划先行
+凡涉及运行时代码、公共 API、依赖或构建行为的开发任务，正式实现前必须先在 `docs/` 目录新增计划任务文档。文档至少说明目标与范围、现状问题、推荐方案、接口兼容性、风险、验收与验证方式，以及相关 TODO 的处理方式。计划阶段只允许编写文档和更新对应 TODO 链接，不得修改运行时代码。
+计划文档直接在 main、master 或当前活跃主分支的工作区中创建，无需为计划阶段单独创建 Worktree 或分支。禁止在主分支执行`git commit`；主分支中的任何修改都必须由开发者自行确认并亲自提交。
+只有在开发者确认并提交计划文档后，AI 才能从最新目标分支创建 Worktree `codex/` 前缀分支，并开始修改运行时代码。
+2. 环境隔离
+除计划文档阶段外，禁止直接修改main、master或活跃分支。实现阶段必须先创建Worktree隔离开发。路径为 .worktree/分支名，前缀为 codex/。所有后续实现操作均在此目录内执行。
+身份配置
+进入Worktree后设置独立Git身份。执行：git config user.name "Codex" 及 git config user.email "codex@openai.com"。
+3. 提交规范
+遵循Conventional Commits规范（如feat:、fix:等）。
+4. 完成与汇报
+完成后禁止自动合并。需生成报告，包含：修改文件、核心逻辑、风险点、Diff摘要。收到用户明确批准指令后，再执行合并并清理Worktree和分支。
+5. 异常处理：
 若提示分支已存在，询问用户是否覆盖或删除。若遇Git冲突，必须请求人工协助，严禁擅自解决。
 
 ## 项目定位
