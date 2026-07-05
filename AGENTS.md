@@ -7,9 +7,10 @@
 Git工作流：
     计划先行
     凡涉及运行时代码、公共 API、依赖或构建行为的开发任务，正式实现前必须先在 `docs/` 目录新增计划任务文档。文档至少说明目标与范围、现状问题、推荐方案、接口兼容性、风险、验收与验证方式，以及相关 TODO 的处理方式。计划阶段只允许编写文档和更新对应 TODO 链接，不得修改运行时代码。
-    计划文档本身也必须在独立的文档 Worktree 和分支中完成，建议分支名使用 `codex/docs-<topic>-plan`。文档提交并汇报后，必须等待用户明确批准；批准并合并计划文档后，再从最新目标分支创建新的实现 Worktree 和分支。不得默认沿用文档分支进行实现。
+    计划文档允许直接在 main、master 或当前活跃主分支的工作区中创建，无需为计划阶段单独创建 Worktree 或分支。AI 完成计划文档后必须停止并汇报 Diff，禁止在主分支执行 `git add` 或 `git commit`；主分支中的任何修改都必须由开发者自行确认并亲自提交。
+    只有在开发者确认并提交计划文档后，AI 才能从最新目标分支创建实现 Worktree 和 `codex/` 前缀分支，并开始修改运行时代码。
     环境隔离
-    禁止直接修改main、master或活跃分支。必须先创建Worktree隔离开发。路径为 .worktree/分支名，前缀为 codex/。示例：git worktree add .worktree/feat-login -b codex/feat-login。所有后续操作均在此目录内执行。
+    除上述计划文档阶段外，禁止直接修改main、master或活跃分支。实现阶段必须先创建Worktree隔离开发。路径为 .worktree/分支名，前缀为 codex/。示例：git worktree add .worktree/feat-login -b codex/feat-login。所有后续实现操作均在此目录内执行。
     身份配置
     进入Worktree后设置独立Git身份。执行：git config user.name "Codex" 及 git config user.email "codex@openai.com"。
     提交规范
