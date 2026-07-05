@@ -128,10 +128,10 @@ pnpm run build-only
 
 ## 实施步骤
 
-- [ ] 开发者确认并在当前主分支提交本计划及 TODO 链接。
-- [ ] 从包含计划提交的最新目标分支创建 `codex/` 前缀分支和对应 Worktree。
-- [ ] 在 Worktree 中配置 Codex Git 身份。
-- [ ] 修改 `EchartsView.vue`，实现 mounted 初始化、容器 resize 监听和卸载前清理。
-- [ ] 执行类型检查、lint、生产打包及手工生命周期验证。
-- [ ] 将对应 TODO 标记为完成，提交符合 Conventional Commits 的实现提交。
+- [x] 开发者确认并在当前主分支提交本计划及 TODO 链接。
+- [x] 从包含计划提交的最新目标分支创建 `codex/` 前缀分支和对应 Worktree。
+- [x] 在 Worktree 中配置 Codex Git 身份。
+- [x] 修改 `EchartsView.vue`，实现 mounted 初始化、容器 resize 监听和卸载前清理。
+- [x] 执行类型检查、lint、生产打包及手工生命周期验证。
+- [x] 将对应 TODO 标记为完成，提交符合 Conventional Commits 的实现提交。
 - [ ] 输出修改文件、核心逻辑、风险点和 Diff 摘要，不自动合并。

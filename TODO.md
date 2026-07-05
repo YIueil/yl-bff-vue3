@@ -10,7 +10,7 @@
 - [X] 消除 Modal 字符串标题和内容直接使用 `innerHTML` 的 XSS 风险；默认按文本渲染，仅为可信内容提供显式 HTML API 或可靠的清洗流程。
 - [X] 修正 `ModalViewOptions.vue` 与 `ModalOptions` 的接口偏差；选项式示例已使用 `component` 和 `componentProps`，不再使用未声明的 `body`、`onClose`。
 - [X] 完善动态 Modal 的挂载机制，保证多个窗口拥有独立、明确的挂载节点，并在关闭和 `closeAll()` 后完整卸载 app、DOM 与事件资源。参见[动态 Modal 挂载机制优化](docs/modal-mounting-optimization.md)。
-- [ ] 修复 ECharts 生命周期管理：在 mounted 后初始化，在 unmounted 前 `dispose()`，响应容器尺寸变化，移除当前不可靠的 `setTimeout()` 初始化。参见 [ECharts 生命周期管理修复计划](docs/echarts-lifecycle-management.md)。
+- [X] 修复 ECharts 生命周期管理：在 mounted 后初始化，在 unmounted 前 `dispose()`，响应容器尺寸变化，移除当前不可靠的 `setTimeout()` 初始化。参见 [ECharts 生命周期管理修复计划](docs/echarts-lifecycle-management.md)。
 
 ## 中优先级
 
