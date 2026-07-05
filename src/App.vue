@@ -10,6 +10,7 @@ const baseurl = import.meta.env.VITE_API_BASE_URL
     {{ baseurl }}
     <div class="wrapper">
       <nav>
+        <a-button type="primary">Antd 按钮</a-button>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
         <RouterLink to="/icon">Icon</RouterLink>

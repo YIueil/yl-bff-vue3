@@ -15,8 +15,13 @@ import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 // 自定义模态框
 import { ModalPlugin } from '@/utils/modal-manager'
 
+// 全局注册Antd
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/reset.css'
+
 const app = createApp(App)
 
+app.use(Antd)
 app.use(createPinia())
 app.use(router)
 app.use(Vue3DraggableResizable)
