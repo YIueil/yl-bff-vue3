@@ -42,6 +42,8 @@ export type EventHandler<T = any> = (ctl: T) => void
 export type ModalObject = {
   // 应用实例
   app: App
+  // 独立挂载节点
+  mountNode: HTMLElement
   // modal上下文
   modalContext: ComponentPublicInstance & ModalAppExport,
   // modalInstance实例

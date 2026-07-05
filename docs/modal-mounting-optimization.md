@@ -122,13 +122,22 @@ DOM 的情况。
 
 ```ts
 const keys = [...this.modalEntryMap.keys()]
+const closeErrors: unknown[] = []
 for (const key of keys) {
-  this.close(key)
+  try {
+    this.close(key)
+  } catch (error) {
+    closeErrors.push(error)
+  }
+}
+if (closeErrors.length > 0) {
+  throw closeErrors[0]
 }
 ```
 
 快照定义了明确语义：本次调用只关闭调用时已经存在的窗口。卸载过程中新增的 Modal 不属于本次
-批量操作；已被重入逻辑提前关闭的 key 会由 `close()` 幂等跳过。
+批量操作；已被重入逻辑提前关闭的 key 会由 `close()` 幂等跳过。单个窗口卸载失败时继续清理
+快照中的其余窗口，全部处理后再抛出第一个错误，避免一个异常导致剩余 app 和 DOM 滞留。
 
 ## 资源所有权与清理责任
 

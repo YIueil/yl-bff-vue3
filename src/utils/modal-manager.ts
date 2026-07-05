@@ -61,12 +61,11 @@ export class ModalManager implements ModalManagerInterface {
     }
     const { title, component, footer, on: onEvent } = options
 
-    // 统一挂载到名为 modal-div 这个类名的 div 下
-    let mountNode = document.getElementsByClassName('modal-div')[0]
-    if (!mountNode) {
-      mountNode = document.createElement('div')
-      document.body.appendChild(mountNode)
-    }
+    // 每个 Modal 使用独立挂载节点，确保 app 和 DOM 资源一一对应
+    const mountNode = document.createElement('div')
+    mountNode.className = 'yl-modal-host'
+    mountNode.dataset.modalKey = String(key)
+    document.body.appendChild(mountNode)
 
     // 渲染函数
     const renderHeader = (): VNode | null => {
@@ -197,7 +196,19 @@ export class ModalManager implements ModalManagerInterface {
       }
     })
     modalApp.use(Vue3DraggableResizable)
-    const modalContext: ComponentPublicInstance = modalApp.mount(mountNode)
+    let modalContext: ComponentPublicInstance
+    try {
+      modalContext = modalApp.mount(mountNode)
+    } catch (mountError) {
+      try {
+        modalApp.unmount()
+      } catch (cleanupError) {
+        console.error(`Modal挂载失败后的卸载清理异常, key: ${key}`, cleanupError)
+      } finally {
+        mountNode.remove()
+      }
+      throw mountError
+    }
     const modalInstance = {
       getKey: () => key,
       close: () => this.close(key),
@@ -206,6 +217,7 @@ export class ModalManager implements ModalManagerInterface {
     }
     this.modalEntryMap.set(key, {
       app: modalApp,
+      mountNode: mountNode,
       modalContext: modalContext,
       modalInstance: modalInstance
     })
@@ -275,15 +287,27 @@ export class ModalManager implements ModalManagerInterface {
     const modalEntry = this.modalEntryMap.get(key)
     if (!modalEntry) return
 
-    const { app } = modalEntry
-    app.unmount()
-    app._container?.remove()
     this.modalEntryMap.delete(key)
+    const { app, mountNode } = modalEntry
+    try {
+      app.unmount()
+    } finally {
+      mountNode.remove()
+    }
   }
 
   public closeAll(): void {
-    for (const key of this.modalEntryMap.keys()) {
-      this.close(key)
+    const keys = [...this.modalEntryMap.keys()]
+    const closeErrors: unknown[] = []
+    for (const key of keys) {
+      try {
+        this.close(key)
+      } catch (error) {
+        closeErrors.push(error)
+      }
+    }
+    if (closeErrors.length > 0) {
+      throw closeErrors[0]
     }
   }
 }
