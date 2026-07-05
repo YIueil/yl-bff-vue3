@@ -152,14 +152,42 @@ pnpm run build-only
 “封装可复用的 ECharts 组件或 composable”继续保持为独立 TODO。本任务不借体积优化提前引入公共
 抽象。
 
+## 实施结果
+
+基于计划提交 `0a7c3b9` 在隔离 Worktree 中执行生产构建，得到可复现基线：
+
+- `EchartsView-CysC4mPm.js`：562.08 kB，gzip 192.21 kB。
+- 首页 `index-BZTehQcS.js`：291.40 kB，gzip 110.24 kB。
+- Vite 报告 ECharts chunk 超过 500 kB。
+
+移除未使用模块后的构建结果：
+
+- `EchartsView-C2nayPx2.js`：497.81 kB，gzip 168.51 kB。
+- 首页 `index-BSZxfE42.js`：291.40 kB，gzip 110.24 kB。
+- ECharts chunk 的 raw 体积减少约 64.27 kB（11.4%），gzip 减少约 23.70 kB（12.3%）。
+- Vite 不再报告 chunk 超过 500 kB，因此无需评估或切换 renderer。
+
+`pnpm run type-check`、`pnpm run lint` 和 `pnpm run build-only` 均已通过。无头 Chrome
+交互验证结果：
+
+- 1280 × 900 视口下图表标题、坐标轴和六组柱状数据正常渲染。
+- 模拟鼠标移动后 tooltip 正确显示“雪纺衫 36”。
+- 将视口宽度从 1280 调整为 800 后，canvas 宽度从 1264 px 调整为 772 px。
+- 通过页面导航执行 `/echarts` → `/` → `/echarts` 往返后，canvas 成功重新创建。
+- Chrome DevTools Protocol 收集到的控制台错误和运行时异常数量均为 0。
+
+此前无头 Firefox 因软件渲染器错误未能生成截图；改用 Chrome 后已完成等价验收，该 Firefox 环境问题
+与应用功能无关。
+
 ## 实施步骤
 
-- [ ] 开发者确认并在当前主分支提交本计划及 TODO 链接。
-- [ ] 从包含计划提交的最新目标分支创建 `codex/` 前缀分支和对应 Worktree。
-- [ ] 在 Worktree 中配置 Codex Git 身份。
-- [ ] 记录 Worktree 中可复现的构建体积基线。
-- [ ] 裁剪未使用的运行时模块并同步收窄 `ECOption`。
-- [ ] 若仍超过 500 kB，按隔离构建数据评估 renderer，不采用提高阈值或机械拆包。
-- [ ] 执行类型检查、lint、生产构建、体积对比和手工验证。
-- [ ] 将对应 TODO 标记为完成，提交符合 Conventional Commits 的实现提交。
+- [x] 开发者确认并在当前主分支提交本计划及 TODO 链接。
+- [x] 从包含计划提交的最新目标分支创建 `codex/` 前缀分支和对应 Worktree。
+- [x] 在 Worktree 中配置 Codex Git 身份。
+- [x] 记录 Worktree 中可复现的构建体积基线。
+- [x] 裁剪未使用的运行时模块并同步收窄 `ECOption`。
+- [x] 构建结果已低于 500 kB，无需评估或切换 renderer。
+- [x] 执行类型检查、lint、生产构建和体积对比。
+- [x] 完成 `/echarts` 页面渲染、tooltip、resize 和路由往返的浏览器交互验收。
+- [x] 将对应 TODO 标记为完成，提交符合 Conventional Commits 的实现提交。
 - [ ] 输出修改文件、核心逻辑、风险点和 Diff 摘要，不自动合并。
