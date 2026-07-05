@@ -12,9 +12,8 @@ Git工作流：
 2. 环境隔离
 除计划文档阶段外，禁止直接修改main、master或活跃分支。实现阶段必须先创建Worktree隔离开发。路径为 .worktree/分支名，前缀为 codex/。所有后续实现操作均在此目录内执行。
 身份配置
-进入Worktree后设置独立Git身份。执行：git config user.name "Codex" 及 git config user.email "codex@openai.com"。
 3. 提交规范
-遵循Conventional Commits规范（如feat:、fix:等）。
+遵循Conventional Commits规范（如feat:、fix:等）。提交时使用临时身份提交：git commit --author="codex <codex@openai.com>" -m "你的提交信息"
 4. 完成与汇报
 完成后禁止自动合并。需生成报告，包含：修改文件、核心逻辑、风险点、Diff摘要。收到用户明确批准指令后，再执行合并并清理Worktree和分支。
 5. 异常处理：
