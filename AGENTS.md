@@ -118,10 +118,12 @@ src/
 
 ## Modal 架构
 
-Modal 分为两层：
+Modal 分为三层：
 
 - `src/components/Modal/YlModal.vue` 负责遮罩、Teleport、Transition、插槽、拖拽缩放、最小化和最大化。
-- `src/utils/modal-manager.ts` 是单例管理器，负责动态创建独立 Vue app，并用 Map 按 `key` 管理实例。
+- `src/components/Modal/YlModalHost.vue` 在主应用组件树中统一渲染 API Modal。
+- `src/utils/modal-manager.ts` 是单例管理器，负责维护响应式 Modal 条目，并用 Map 按 `key`
+  管理实例。
 
 ### 使用方式
 
@@ -147,14 +149,21 @@ footer 的 `eventName: 'close'`，或在 `on` 回调中调用 `ModalInstance.clo
 
 - 相同 `key` 再次调用 `open()` 不会重建内容，只会将已有窗口设为显示。需要刷新 props 时先关闭再打开，或扩展管理器的更新能力。
 - 未提供 `key` 时使用 `Math.random()`，需要稳定引用、去重或恢复窗口时必须显式提供 key。
-- 动态 Modal 是通过 `createApp()` 创建的独立应用，不会自动继承主应用的 Router、Pinia、provide 或全局插件。内容组件依赖这些能力时，需要在 Modal app 中显式安装/传递，或重构为主应用内渲染。
-- 管理器只显式给动态 app 安装了 `Vue3DraggableResizable`。
-- `hide()` 只切换 `v-show`，保留组件状态；`close()` 会 unmount 并从 Map 删除。
+- `App.vue` 必须在 `RouterView` 外装配且只装配一个 `YlModalHost`。Host 不能随路由页面切换而
+  卸载。
+- 动态 Modal 与 Host 都属于主应用组件树，内容组件可以直接使用主应用的 Router、Pinia、
+  应用级 `provide`、全局组件、全局指令和 `globalProperties`，无需重复安装插件。
+- 路由页面等子组件的局部 `provide` 不会跨兄弟子树传给根级 Host。确需局部上下文时，应设计
+  局部 Host/channel 或显式 providers，禁止复制 Vue 私有 `app._context`。
+- `hide()` 只切换 `v-show`，保留组件状态；`close()` 从 Map 删除条目，并由主应用 renderer
+  卸载组件与 Teleport 资源。
 - `YlModal` 中的部分本地状态只在初始化时读取 props，运行时修改对应 prop 不一定同步。现有声明式示例通过修改 `key` 强制重建。
 - 默认尺寸为 `900 x 560`，移动端和窗口尺寸变化尚未完善。
 - 字符串标题和字符串内容默认按文本渲染。仅可信静态内容可使用 `Modal.trustedHtml()` 显式按 HTML 渲染；该方法不执行清洗，不得传入未经可靠清洗的用户输入。
 
-修改 Modal 时至少手工覆盖：声明式打开/关闭、API 打开、重复 key、隐藏后重显、关闭全部、遮罩点击、footer 自定义事件、最小化/恢复、最大化/恢复和内容组件 expose 调用。
+修改 Modal 时至少手工覆盖：声明式打开/关闭、API 打开、重复 key、隐藏后重显、关闭全部、
+遮罩点击、footer 自定义事件、最小化/恢复、最大化/恢复、内容组件 expose 调用，以及内容组件
+访问 Router、Pinia、应用级 provide 和全局属性。
 
 ## 图标流程
 

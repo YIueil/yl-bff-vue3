@@ -342,8 +342,25 @@ pnpm run build-only
 `pnpm run build-only` 现有 ECharts chunk size 警告应与本任务新增问题区分。运行 Vite 后检查
 `auto-imports.d.ts` 和 `components.d.ts` 是否只有预期的自动生成变更。
 
+## 实施结果
+
+本方案已按主应用内单一 Host 的设计实现：
+
+- `App.vue` 在 `RouterView` 外固定装配一个 `YlModalHost`。
+- `ModalManager` 改为管理浅响应式窗口条目，不再调用每窗口 `createApp()`、`use()`、
+  `unmount()` 或手工 DOM 挂载。
+- 标题、内容、footer 和可信 HTML 渲染由 Host 在主应用渲染上下文中完成。
+- `open()` 返回值与 footer 回调统一使用稳定的 `ModalInstance`，关闭后不继续持有内容组件
+  引用。
+- `ModalObject` 改为 Host 条目结构，不再暴露独立 app；`mountNode` 仅作为可选诊断引用。
+- 新增 `ModalContextProbe` 演示内容，并在 Modal 页面同时展示共享 Pinia 状态。
+- Host 缺失或重复时在开发环境输出诊断；最后一个 Host 卸载时清空单例中的陈旧条目。
+
+实现后已通过类型检查、ESLint、生产构建和无头浏览器回归。浏览器回归覆盖 Router、共享 Pinia、
+应用级 provide、`$modal`、全局拖拽组件、重复 key、内容组件 expose、隐藏恢复、路由切换、
+Teleport 开关和关闭后的 DOM 清理。
+
 ## TODO 处理
 
-计划阶段只为 `TODO.md` 中对应未完成项增加本文链接，不提前勾选。运行时代码、类型、演示验证和
-上述回归全部完成后，才将该项标记为 `[X]`。局部组件 provide 的跨子树继承不属于本项完成条件，
-其边界应保留在项目文档中；只有出现明确业务需求时再新增独立 TODO。
+`TODO.md` 对应项已在运行时代码、类型、演示和回归完成后标记为 `[X]`。局部组件 provide 的
+跨子树继承不属于本项完成条件，其边界保留在本文中；只有出现明确业务需求时再新增独立 TODO。

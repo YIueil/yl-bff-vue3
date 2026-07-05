@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-const baseurl = import.meta.env.VITE_API_BASE_URL
+import YlModalHost from '@/components/Modal/YlModalHost.vue'
 
+const baseurl = import.meta.env.VITE_API_BASE_URL
 </script>
 
 <template>
@@ -22,6 +23,7 @@ const baseurl = import.meta.env.VITE_API_BASE_URL
   </header>
 
   <RouterView />
+  <YlModalHost />
 </template>
 
 <style scoped>

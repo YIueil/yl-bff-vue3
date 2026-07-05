@@ -1,5 +1,9 @@
 # 动态 Modal 挂载机制优化
 
+> 历史说明：本文记录了独立 `createApp()` 架构下已完成的挂载资源治理。动态 Modal 后续已迁移到
+> 主应用内的统一 Host，不再为每个窗口创建 app。当前架构以
+> [动态 Modal 主应用上下文继承方案](dynamic-modal-context-inheritance.md) 和实际代码为准。
+
 ## 背景
 
 `ModalManager` 通过 `createApp()` 为每个 API Modal 创建独立 Vue 应用，并使用

@@ -16,8 +16,10 @@ declare module 'vue' {
     IMdiResize: typeof import('~icons/mdi/resize')['default']
     IMdiWindowMaximize: typeof import('~icons/mdi/window-maximize')['default']
     IMdiWindowRestore: typeof import('~icons/mdi/window-restore')['default']
+    ModalContextProbe: typeof import('./src/components/Modal/ModalContextProbe.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     YlModal: typeof import('./src/components/Modal/YlModal.vue')['default']
+    YlModalHost: typeof import('./src/components/Modal/YlModalHost.vue')['default']
   }
 }

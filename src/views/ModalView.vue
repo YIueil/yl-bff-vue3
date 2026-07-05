@@ -3,15 +3,24 @@ import { Modal } from '@/utils/modal-manager'
 import AboutView, { type AboutViewExpose } from '@/views/AboutView.vue'
 import { type ModalInstance, ModalManagerInterface } from '@/types/components/modal.d'
 import ModalViewOptions from '@/views/ModalViewOptions.vue'
+import ModalContextProbe from '@/components/Modal/ModalContextProbe.vue'
+import { useCounterStore } from '@/stores/counter'
+
 const showModal = ref(false)
 const showFooter = ref(true)
 const modelKey = ref(0)
+const counterStore = useCounterStore()
 
 // 通过全局定义调用
 const modal = inject<ModalManagerInterface>('modal')
 
 const closeAll = function () {
   Modal.closeAll()
+}
+
+const closeDeclarativeModal = function () {
+  showModal.value = false
+  modelKey.value++
 }
 
 const openModalByFunction = function () {
@@ -25,25 +34,32 @@ const openModalByFunction = function () {
     componentProps: {
       userName: '张三'
     },
-    footer: [{
-      name: '发送',
-      eventName: 'send'
-    }, {
-      name: '关闭',
-      eventName: 'close'
-    }, {
-      name: '临时隐藏',
-      eventName: 'hide',
-    }, {
-      name: '获取key',
-      eventName: 'getKey'
-    }, {
-      name: '打印当前count',
-      eventName: 'print'
-    }, {
-      name: '增加count',
-      eventName: 'increment'
-    }],
+    footer: [
+      {
+        name: '发送',
+        eventName: 'send'
+      },
+      {
+        name: '关闭',
+        eventName: 'close'
+      },
+      {
+        name: '临时隐藏',
+        eventName: 'hide'
+      },
+      {
+        name: '获取key',
+        eventName: 'getKey'
+      },
+      {
+        name: '打印当前count',
+        eventName: 'print'
+      },
+      {
+        name: '增加count',
+        eventName: 'increment'
+      }
+    ],
     on: {
       send: function (ctl: ModalInstance) {
         console.log('send发送, 可能需要拿到ctl做一些操作, 比如拿到ctl中的data中的属性', ctl)
@@ -76,11 +92,16 @@ const openModalByFunction2 = function () {
     key: '第二个API窗体',
     title: '第二个API窗体',
     showFooter: false,
-    component: () => h(`div`, {
-      style: {
-        background: 'green'
-      }
-    }, '第二个API窗体, 通过h函数渲染')
+    component: () =>
+      h(
+        `div`,
+        {
+          style: {
+            background: 'green'
+          }
+        },
+        '第二个API窗体, 通过h函数渲染'
+      )
   })
 }
 
@@ -114,30 +135,53 @@ const openTrustedHtmlModal = function () {
   })
 }
 
+const openContextProbeModal = function () {
+  Modal.open({
+    key: '主应用上下文验证窗体',
+    title: '主应用上下文验证',
+    component: ModalContextProbe,
+    footer: [
+      {
+        name: '关闭',
+        eventName: 'close',
+        icon: '',
+        type: 'default'
+      }
+    ]
+  })
+}
 </script>
 
 <template>
+  <p>主页面共享 Pinia count：{{ counterStore.count }}</p>
+  <button @click="counterStore.increment()">在主页面增加共享 count</button>
   <button @click="console.log(modal?.listModal())">打印所有的Modal信息</button>
   <button @click="console.log(modal?.getModalEntryMap())">打印ModalEntryMap</button>
-  <br/>
+  <br />
   <button @click="showModal = true">弹出Modal</button>
   <button @click="openModalByFunction">API弹出Modal1</button>
   <button @click="openModalByFunction2">API弹出Modal2</button>
   <button @click="openModalByFunction3">API弹出Modal3</button>
   <button @click="openModalByFunction4">API弹出Modal4</button>
   <button @click="openTrustedHtmlModal">API弹出可信HTML Modal</button>
+  <button @click="openContextProbeModal">验证主应用上下文</button>
   <button @click="closeAll">关闭所有</button>
-  <YlModal :key="modelKey" :visible="showModal" :show-footer="showFooter" :show-mask="true" @ok="showFooter = !showFooter" @close="showModal = false; modelKey++;">
+  <YlModal
+    :key="modelKey"
+    :visible="showModal"
+    :show-footer="showFooter"
+    :show-mask="true"
+    @ok="showFooter = !showFooter"
+    @close="closeDeclarativeModal"
+  >
     <template v-slot:header>
       弹出框标题很长很长很长很长很长很长很长很长很长很长很长很长很长很长
     </template>
     <template v-slot:body>
-      <AboutView userName="外部传入用户" @btnClick="showModal = false; modelKey++;" />
+      <AboutView userName="外部传入用户" @btnClick="closeDeclarativeModal" />
     </template>
   </YlModal>
   <ModalViewOptions />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

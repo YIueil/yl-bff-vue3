@@ -1,7 +1,8 @@
-import { type App, type Component, type VNode } from 'vue'
+import type { Component, ComponentPublicInstance, VNode } from 'vue'
 import type { ComponentWithUnknownProps } from '@/types'
 
 declare const modalTrustedHtmlBrand: unique symbol
+export type ModalKey = string | number
 
 export type ModalTrustedHtml = {
   readonly html: string
@@ -9,57 +10,50 @@ export type ModalTrustedHtml = {
 }
 
 export class ModalManagerInterface {
-  public getModal(key: string | number): ModalObject | undefined
+  public getModal(key: ModalKey): ModalObject | undefined
   public listModal(): IterableIterator<ModalObject>
-  public getModalEntryMap()
+  public getModalEntryMap(): ReadonlyMap<ModalKey, ModalObject>
   /** 标记可信 HTML 以跳过文本转义；该方法不会清洗传入内容。 */
   public trustedHtml(html: string): ModalTrustedHtml
   public open<T = any>(options: ModalOptions<T>): ModalInstance
-  public close(key: string | number): void
+  public close(key: ModalKey): void
   public closeAll(): void
-  public hide(key: string | number): void
-  public show(key: string | number): void
+  public hide(key: ModalKey): void
+  public show(key: ModalKey): void
 }
 
 export interface ModalInstance<T = ComponentWithUnknownProps> {
-  showModal?: boolean,
-  getKey: () => string | number
-  close: () => void,
-  closeAll: () => void,
-  hide: () => void,
-  contentComponent?: ComponentPublicInstance & T,
-  currentInstance?: ComponentPublicInstance & T
-}
-
-export interface ModalAppExport<T = ComponentWithUnknownProps> {
-  showModal?: boolean,
-  contentComponent?: ComponentPublicInstance & T,
+  readonly showModal?: boolean
+  getKey: () => ModalKey
+  close: () => void
+  closeAll: () => void
+  hide: () => void
+  contentComponent?: ComponentPublicInstance & T
   currentInstance?: ComponentPublicInstance & T
 }
 
 export type EventHandler<T = any> = (ctl: T) => void
 
 export type ModalObject = {
-  // 应用实例
-  app: App
-  // 独立挂载节点
-  mountNode: HTMLElement
-  // modal上下文
-  modalContext: ComponentPublicInstance & ModalAppExport,
-  // modalInstance实例
+  key: ModalKey
+  options: ModalOptions
+  visible: boolean
+  showModal: boolean
+  contentComponent?: ComponentPublicInstance
+  mountNode?: HTMLElement
   modalInstance: ModalInstance
 }
 
 export type ButtonAndEvent = {
-  name: string,
-  eventName: string,
-  icon: string,
+  name: string
+  eventName: string
+  icon: string
   type: 'primary' | 'danger' | 'default'
 }
 
 export type ModalOptions<T = any> = {
   // 唯一标识
-  key?: string | number
+  key?: ModalKey
   // 基础配置
   showMask?: boolean
   showHeader?: boolean
