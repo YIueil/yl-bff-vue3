@@ -20,6 +20,7 @@ const openModalByFunction = function () {
     title: '第一个API窗体',
     showMask: true,
     showHeader: true,
+    clickMaskClose: true,
     component: AboutView,
     componentProps: {
       userName: '张三'

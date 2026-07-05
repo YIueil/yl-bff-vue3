@@ -181,7 +181,7 @@ const windowMaximize = function () {
 
 const onMaskClick = function () {
   if (props.clickMaskClose) {
-    emits('close')
+    modalClose()
   }
 }
 
