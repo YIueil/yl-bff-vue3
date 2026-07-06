@@ -1,6 +1,6 @@
 # Vitest TypeScript 项目引用修复计划
 
-> 状态：计划中（待开发者确认并提交）
+> 状态：已完成
 >
 > 本文档遵循 `AGENTS.md` 的“计划先行”约束。计划阶段只新增本文并更新
 > `TODO.md` 链接，不修改测试代码或 TypeScript 配置。
@@ -46,11 +46,15 @@
 - 覆盖应用项目对测试目录的排除规则。
 - 保持 project reference 所需的 `composite: true`，并使用独立的
   `node_modules/.tmp/tsconfig.vitest.tsbuildinfo`。
-- `include` 至少覆盖：
+- `include` 覆盖：
   - `env.d.ts`
   - `components.d.ts`
   - `auto-imports.d.ts`
-  - `src/**/__tests__/**/*.ts`
+  - `src/**/*`
+  - `src/**/*.vue`
+- 测试会间接导入应用源码，而 `composite` 项目要求所有实现文件均被文件列表或 `include` 覆盖；
+  因此测试项目需纳入 `src/`，否则会产生 `TS6307`。应用项目和测试项目使用不同 tsbuildinfo，
+  根构建中的重复检查属于增强测试类型覆盖的可接受成本。
 - 保留 `vitest/globals`、`node` 和 `vite/client` 类型。
 - `vitest.config.ts` 已由 `tsconfig.node.json` 覆盖，不重复归入 DOM 测试项目。
 
@@ -79,8 +83,8 @@
 
 ## 5. 风险
 
-- **重复项目覆盖**：测试项目若错误包含全部应用源码，会造成重复检查或 tsbuildinfo 冲突。通过
-  独立 `tsBuildInfoFile` 和精确 `include` 控制。
+- **重复项目覆盖**：测试项目必须包含测试所导入的应用源码，会在根构建中重复检查部分文件。通过
+  独立 `tsBuildInfoFile` 避免产物冲突；当前项目规模下额外耗时可接受。
 - **继承排除规则**：若未显式覆盖 `exclude`，测试文件仍可能被应用配置排除。
 - **自动导入类型缺失**：若遗漏 `auto-imports.d.ts`，TS2307 消失后会转为 Vue API 全局名称错误。
 - **IDE 缓存**：配置修复后 JetBrains/VS Code 可能需要重新加载 TypeScript 项目；这不是代码
