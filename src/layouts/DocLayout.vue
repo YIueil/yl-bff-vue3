@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch, nextTick } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 interface NavItem {
@@ -9,104 +9,181 @@ interface NavItem {
   description: string
 }
 
+interface AnchorItem {
+  key: string
+  href: string
+  title: string
+}
+
+const MOBILE_BREAKPOINT = 992
+
 const route = useRoute()
 
 const navItems: NavItem[] = [
-  { key: 'icon', label: '图标 Icon', path: '/components/icon', description: 'Iconify 三种用法与自定义图标' },
-  { key: 'modal', label: '模态框 Modal', path: '/components/modal', description: '声明式 / API / 选项式 / 上下文' },
-  { key: 'button', label: '按钮 Button', path: '/components/button', description: '基础按钮样式与修饰类' },
-  { key: 'echarts', label: '图表 ECharts', path: '/components/echarts', description: '按需引入与生命周期管理' },
-  { key: 'draggable', label: '列表拖拽 Draggable', path: '/components/draggable', description: 'vue-draggable-plus 列表排序' },
-  { key: 'drag-resize', label: '元素拖拽缩放 DragResize', path: '/components/drag-resize', description: 'vue3-draggable-resizable 单元素' },
-  { key: 'about', label: '关于 About', path: '/components/about', description: '项目说明与能力索引' }
+  {
+    key: 'icon',
+    label: '图标 Icon',
+    path: '/components/icon',
+    description: 'Iconify 三种用法与自定义图标'
+  },
+  {
+    key: 'modal',
+    label: '模态框 Modal',
+    path: '/components/modal',
+    description: '声明式 / API / 选项式 / 上下文'
+  },
+  {
+    key: 'button',
+    label: '按钮 Button',
+    path: '/components/button',
+    description: '基础按钮样式与修饰类'
+  },
+  {
+    key: 'echarts',
+    label: '图表 ECharts',
+    path: '/components/echarts',
+    description: '按需引入与生命周期管理'
+  },
+  {
+    key: 'draggable',
+    label: '列表拖拽 Draggable',
+    path: '/components/draggable',
+    description: 'vue-draggable-plus 列表排序'
+  },
+  {
+    key: 'drag-resize',
+    label: '元素拖拽缩放 DragResize',
+    path: '/components/drag-resize',
+    description: 'vue3-draggable-resizable 单元素'
+  },
+  {
+    key: 'about',
+    label: '关于 About',
+    path: '/components/about',
+    description: '项目说明与能力索引'
+  }
 ]
 
-const siderCollapsed = ref(false)
-
-// 记录当前内容区滚动容器，让 anchor 跳转有正确的容器上下文
 const scrollContainer = ref<HTMLElement | null>(null)
-const anchorItems = ref<Array<{ key: string; href: string; title: string }>>([])
+const anchorItems = ref<AnchorItem[]>([])
+const isMobile = ref(false)
+const desktopNavOpen = ref(true)
+const mobileNavOpen = ref(false)
 
-// 当前章节标题从 route.meta.title 读取
+let mobileMediaQuery: MediaQueryList | null = null
+
 const currentTitle = computed(() => {
-  const metaTitle = (route.meta?.title as string | undefined) ?? '组件文档'
-  return metaTitle
+  return (route.meta?.title as string | undefined) ?? '组件文档'
 })
+
+const navigationOpen = computed(() => {
+  return isMobile.value ? mobileNavOpen.value : desktopNavOpen.value
+})
+
+const siderCollapsed = computed(() => !navigationOpen.value)
+
+const getAnchorContainer = (): HTMLElement | Window => {
+  return scrollContainer.value ?? window
+}
 
 const collectAnchorItems = async () => {
   await nextTick()
-  // 等待子页内容挂载
   await nextTick()
-  const page = document.querySelector('main.doc-page')
+
+  const page = scrollContainer.value?.querySelector('main.doc-page')
   if (!page) {
     anchorItems.value = []
     return
   }
-  const headings = page.querySelectorAll<HTMLElement>('[data-anchor]')
-  const items: Array<{ key: string; href: string; title: string }> = []
-  headings.forEach((el) => {
-    const key = el.dataset.anchor as string
-    const title = (el.textContent || '').trim()
-    if (!key || !title) return
-    items.push({ key, href: `#${key}`, title })
-  })
-  anchorItems.value = items
+
+  anchorItems.value = Array.from(page.querySelectorAll<HTMLElement>('[data-anchor]'))
+    .map((element) => {
+      const key = element.dataset.anchor
+      const title = (element.textContent || '').trim()
+
+      return key && title ? { key, href: `#${key}`, title } : null
+    })
+    .filter((item): item is AnchorItem => item !== null)
 }
 
-// 路由变化时刷新 anchor items
+const toggleNavigation = () => {
+  if (isMobile.value) {
+    mobileNavOpen.value = !mobileNavOpen.value
+    return
+  }
+
+  desktopNavOpen.value = !desktopNavOpen.value
+}
+
+const closeMobileNavigation = () => {
+  if (isMobile.value) {
+    mobileNavOpen.value = false
+  }
+}
+
+const handleMediaChange = (event: MediaQueryListEvent | MediaQueryList) => {
+  isMobile.value = event.matches
+  mobileNavOpen.value = false
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && mobileNavOpen.value) {
+    mobileNavOpen.value = false
+  }
+}
+
+const handleAnchorClick = (event: MouseEvent, info: { href: string }) => {
+  event.preventDefault()
+  window.history.replaceState(window.history.state, '', info.href)
+}
+
 watch(
   () => route.fullPath,
-  () => {
-    collectAnchorItems()
+  async () => {
+    closeMobileNavigation()
+    await collectAnchorItems()
   },
   { immediate: true }
 )
 
-// 监听窗口尺寸变化，折叠 sider
-const updateSiderByWidth = () => {
-  if (typeof window === 'undefined') return
-  siderCollapsed.value = window.innerWidth < 992
-}
-
-const onResize = () => updateSiderByWidth()
-
 onMounted(() => {
-  updateSiderByWidth()
-  window.addEventListener('resize', onResize)
+  mobileMediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+  handleMediaChange(mobileMediaQuery)
+  mobileMediaQuery.addEventListener('change', handleMediaChange)
+  window.addEventListener('keydown', handleKeydown)
   collectAnchorItems()
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize)
+  mobileMediaQuery?.removeEventListener('change', handleMediaChange)
+  window.removeEventListener('keydown', handleKeydown)
 })
-
-const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string }) => {
-  // 让浏览器处理 hash 跳转即可
-  e.preventDefault()
-  const targetId = info.href.replace(/^#/, '')
-  const target = document.getElementById(targetId)
-  if (target) {
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    if (history.pushState) {
-      history.pushState(null, '', info.href)
-    }
-  }
-}
 </script>
 
 <template>
   <a-layout class="doc-layout">
     <a-layout-header class="doc-header">
       <div class="doc-header-inner">
+        <button
+          type="button"
+          class="doc-menu-toggle"
+          :aria-label="navigationOpen ? '收起组件导航' : '展开组件导航'"
+          :aria-expanded="navigationOpen"
+          aria-controls="doc-navigation"
+          @click="toggleNavigation"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
         <RouterLink to="/components" class="doc-brand">
           <span class="doc-brand-mark">YL</span>
           <span class="doc-brand-name">yl-bff-vue3</span>
-          <span class="doc-brand-tag">组件文档</span>
         </RouterLink>
 
-        <div class="doc-header-spacer"></div>
-
-        <h1 class="doc-header-title">{{ currentTitle }}</h1>
+        <span class="doc-header-divider" aria-hidden="true"></span>
+        <span class="doc-header-title">{{ currentTitle }}</span>
 
         <div class="doc-header-spacer"></div>
 
@@ -115,51 +192,64 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
     </a-layout-header>
 
     <a-layout class="doc-body">
+      <button
+        v-if="isMobile && mobileNavOpen"
+        type="button"
+        class="doc-nav-backdrop"
+        aria-label="关闭组件导航"
+        @click="closeMobileNavigation"
+      ></button>
+
       <a-layout-sider
-        :width="220"
+        id="doc-navigation"
+        :width="240"
+        :collapsed-width="0"
         :collapsed="siderCollapsed"
         :collapsible="true"
+        :trigger="null"
         theme="light"
         class="doc-sider"
       >
         <nav class="doc-nav" aria-label="组件导航">
-          <RouterLink
-            to="/"
-            class="doc-nav-item"
-            :class="{ 'doc-nav-item-home': true }"
-          >
-            <span class="doc-nav-dot"></span>
-            <span class="doc-nav-label">首页 Home</span>
+          <RouterLink to="/" class="doc-nav-item doc-nav-item-home" @click="closeMobileNavigation">
+            首页 Home
           </RouterLink>
-          <div class="doc-nav-divider">组件</div>
+
+          <div class="doc-nav-divider">组件总览</div>
+
           <RouterLink
             v-for="item in navItems"
             :key="item.key"
             :to="item.path"
+            :title="item.description"
             class="doc-nav-item"
             active-class="doc-nav-item-active"
+            @click="closeMobileNavigation"
           >
-            <span class="doc-nav-dot"></span>
-            <span class="doc-nav-label">{{ item.label }}</span>
-            <span class="doc-nav-desc">{{ item.description }}</span>
+            {{ item.label }}
           </RouterLink>
         </nav>
       </a-layout-sider>
 
       <a-layout-content class="doc-content">
-        <div ref="scrollContainer" class="doc-scroll">
-          <RouterView v-slot="{ Component, route: childRoute }">
-            <component :is="Component" :key="childRoute.fullPath" />
-          </RouterView>
+        <div ref="scrollContainer" class="doc-scroll-container">
+          <div class="doc-scroll">
+            <RouterView v-slot="{ Component, route: childRoute }">
+              <component :is="Component" :key="childRoute.path" />
+            </RouterView>
+          </div>
         </div>
       </a-layout-content>
 
-      <aside class="doc-toc">
+      <aside class="doc-toc" aria-label="页内目录">
         <div class="doc-anchor-wrap">
+          <div class="doc-toc-title">本页目录</div>
           <a-anchor
             v-if="anchorItems.length > 0"
             :items="anchorItems"
-            :target-offset="64"
+            :affix="false"
+            :get-container="getAnchorContainer"
+            :target-offset="24"
             class="doc-anchor"
             @click="handleAnchorClick"
           />
@@ -171,33 +261,28 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 </template>
 
 <style scoped>
-:root,
 .doc-layout {
-  --doc-ink: #172033;
-  --doc-muted: #5d6678;
-  --doc-line: #dce2eb;
+  --doc-ink: #262626;
+  --doc-muted: #8c8c8c;
+  --doc-line: #f0f0f0;
   --doc-surface: #ffffff;
-  --doc-surface-soft: #f5f7fb;
-  --doc-accent: #3157d5;
-  --doc-accent-soft: #edf1ff;
-  --doc-header-bg: linear-gradient(135deg, #243b80 0%, #3157d5 55%, #4a75ef 100%);
-}
-
-.doc-layout {
+  --doc-surface-soft: #fafafa;
+  --doc-accent: #1677ff;
   min-height: 100vh;
   color: var(--doc-ink);
-  background: var(--doc-surface-soft);
+  background: var(--doc-surface);
 }
 
 .doc-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  position: relative;
+  z-index: 20;
   height: 64px;
-  padding: 0 24px;
-  color: #ffffff;
-  background: var(--doc-header-bg);
-  box-shadow: 0 4px 16px rgb(26 51 117 / 18%);
+  padding: 0 28px;
+  color: var(--doc-ink);
+  line-height: normal;
+  background: var(--doc-surface);
+  border-bottom: 1px solid var(--doc-line);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
 }
 
 .doc-header-inner {
@@ -207,198 +292,233 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
   height: 100%;
 }
 
+.doc-menu-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-right: 12px;
+  padding: 0;
+  color: var(--doc-ink);
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.doc-menu-toggle span {
+  width: 16px;
+  height: 1px;
+  background: currentcolor;
+}
+
+.doc-menu-toggle:hover {
+  color: var(--doc-accent);
+  background: #f5f5f5;
+}
+
+.doc-menu-toggle:focus-visible,
+.doc-brand:focus-visible,
+.doc-back-home:focus-visible,
+.doc-nav-item:focus-visible {
+  outline: 2px solid var(--doc-accent);
+  outline-offset: 2px;
+}
+
 .doc-brand {
   display: inline-flex;
+  flex: 0 0 auto;
   gap: 10px;
   align-items: center;
-  color: inherit;
+  color: var(--doc-ink);
   text-decoration: none;
 }
 
 .doc-brand-mark {
   display: inline-grid;
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   place-items: center;
-  color: var(--doc-accent);
-  background: #ffffff;
-  border-radius: 10px;
+  color: #ffffff;
+  background: var(--doc-accent);
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 800;
-  font-size: 14px;
   letter-spacing: 0.04em;
 }
 
 .doc-brand-name {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.doc-brand-tag {
-  padding: 3px 8px;
-  background: rgb(255 255 255 / 18%);
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
+.doc-header-divider {
+  width: 1px;
+  height: 20px;
+  margin: 0 18px;
+  background: var(--doc-line);
+}
+
+.doc-header-title {
+  color: var(--doc-muted);
+  font-size: 14px;
 }
 
 .doc-header-spacer {
   flex: 1 1 auto;
 }
 
-.doc-header-title {
-  margin: 0;
-  color: #ffffff;
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  opacity: 0.92;
-}
-
 .doc-back-home {
   display: inline-flex;
-  gap: 6px;
   align-items: center;
   height: 36px;
-  padding: 0 14px;
-  color: var(--doc-accent);
-  background: #ffffff;
-  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--doc-ink);
+  border-radius: 6px;
   text-decoration: none;
-  font-weight: 600;
   font-size: 14px;
-  transition: transform 0.2s ease;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
 }
 
 .doc-back-home:hover {
-  transform: translateY(-1px);
+  color: var(--doc-accent);
+  background: #f5f5f5;
 }
 
 .doc-body {
+  position: relative;
   display: flex;
   height: calc(100vh - 64px);
+  min-height: 0;
   overflow: hidden;
-  background: var(--doc-surface-soft);
+  background: var(--doc-surface);
 }
 
 .doc-sider {
-  flex: 0 0 220px;
+  position: relative;
+  z-index: 11;
+  flex: 0 0 auto;
+  height: 100%;
+  overflow: hidden;
+  background: var(--doc-surface) !important;
+  border-right: 1px solid var(--doc-line);
+}
+
+.doc-sider :deep(.ant-layout-sider-children) {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  background: var(--doc-surface);
-  border-right: 1px solid var(--doc-line);
   scrollbar-gutter: stable;
 }
 
 .doc-nav {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 16px 12px;
+  min-width: 240px;
+  padding: 22px 20px 40px;
 }
 
 .doc-nav-divider {
-  margin: 12px 8px 6px;
+  margin: 8px 12px 12px;
+  padding-bottom: 12px;
   color: var(--doc-muted);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  border-bottom: 1px solid var(--doc-line);
+  font-size: 13px;
 }
 
 .doc-nav-item {
-  display: grid;
-  grid-template-columns: 8px 1fr;
-  grid-template-rows: auto auto;
-  gap: 2px 10px;
+  position: relative;
+  display: flex;
   align-items: center;
-  padding: 8px 10px;
+  min-height: 40px;
+  padding: 8px 12px;
   color: var(--doc-ink);
-  background: transparent;
-  border-radius: 8px;
   text-decoration: none;
-  transition: background 0.15s ease, color 0.15s ease;
+  font-size: 14px;
+  line-height: 24px;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
 }
 
 .doc-nav-item:hover {
-  background: var(--doc-accent-soft);
   color: var(--doc-accent);
-}
-
-.doc-nav-item-home {
-  grid-template-rows: auto;
-  font-weight: 600;
+  background: #f5f5f5;
 }
 
 .doc-nav-item-active {
   color: var(--doc-accent);
-  background: var(--doc-accent-soft);
+  background: #e6f4ff;
+  font-weight: 500;
 }
 
-.doc-nav-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--doc-line);
-  border-radius: 50%;
-  grid-row: 1 / span 2;
-}
-
-.doc-nav-item-active .doc-nav-dot,
-.doc-nav-item:hover .doc-nav-dot {
+.doc-nav-item-active::after {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  bottom: 8px;
+  width: 2px;
   background: var(--doc-accent);
+  border-radius: 2px;
+  content: '';
 }
 
-.doc-nav-label {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.doc-nav-desc {
-  grid-column: 2;
-  color: var(--doc-muted);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.doc-nav-item-home .doc-nav-desc {
-  display: none;
+.doc-nav-item-home {
+  margin-bottom: 10px;
+  font-weight: 500;
 }
 
 .doc-content {
-  position: relative;
-  flex: 1 1 auto;
   min-width: 0;
   height: 100%;
-  padding: 0;
+  overflow: hidden;
+  background: var(--doc-surface);
+}
+
+.doc-scroll-container {
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  background: var(--doc-surface-soft);
   scrollbar-gutter: stable;
 }
 
-.doc-affix {
-  z-index: 5;
-  background: var(--doc-surface);
-  border-bottom: 1px solid var(--doc-line);
+.doc-scroll {
+  width: 100%;
+  max-width: 1080px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 48px 48px 80px;
 }
 
 .doc-toc {
-  flex: 0 0 220px;
+  flex: 0 0 176px;
   height: 100%;
-  padding: 24px 16px 24px 0;
   overflow-y: auto;
   overflow-x: hidden;
-  background: var(--doc-surface-soft);
+  background: var(--doc-surface);
+  border-left: 1px solid var(--doc-line);
   scrollbar-gutter: stable;
 }
 
 .doc-anchor-wrap {
-  display: flex;
-  align-items: flex-start;
-  min-height: 48px;
-  padding: 8px 8px 8px 24px;
-  overflow-x: auto;
+  padding: 36px 16px 40px;
+}
+
+.doc-toc-title {
+  margin: 0 0 12px 8px;
+  color: var(--doc-muted);
+  font-size: 12px;
 }
 
 .doc-anchor {
@@ -406,50 +526,128 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
   background: transparent;
 }
 
+.doc-anchor :deep(.ant-anchor-wrapper) {
+  margin-left: 0;
+  padding-left: 0;
+  background: transparent;
+}
+
 .doc-anchor :deep(.ant-anchor) {
-  position: static;
-  max-width: 100%;
+  padding-left: 0;
+}
+
+.doc-anchor :deep(.ant-anchor::before) {
+  border-inline-start-color: var(--doc-line);
+}
+
+.doc-anchor :deep(.ant-anchor-link) {
+  padding: 4px 0 4px 16px;
+}
+
+.doc-anchor :deep(.ant-anchor-link-title) {
+  overflow: hidden;
+  color: #595959;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc-anchor :deep(.ant-anchor-link-title:hover),
+.doc-anchor :deep(.ant-anchor-link-title-active) {
+  color: var(--doc-accent);
 }
 
 .doc-anchor-empty {
+  padding-left: 8px;
   color: var(--doc-muted);
   font-size: 13px;
 }
 
-.doc-scroll {
-  padding: 24px 32px 64px;
+.doc-nav-backdrop {
+  display: none;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1199px) {
   .doc-toc {
-    display: none;
-  }
-}
-
-@media (max-width: 992px) {
-  .doc-header-title {
-    display: none;
-  }
-
-  .doc-sider {
-    position: fixed;
-    z-index: 9;
-    height: calc(100vh - 64px);
-  }
-}
-
-@media (max-width: 640px) {
-  .doc-brand-name,
-  .doc-brand-tag {
     display: none;
   }
 
   .doc-scroll {
-    padding: 16px 16px 48px;
+    max-width: 1040px;
   }
 }
 
-/* 覆盖各文档子页 hero 段：antd typography 默认 margin 会破坏紧凑排版 */
+@media (max-width: 991px) {
+  .doc-header {
+    padding: 0 20px;
+  }
+
+  .doc-sider {
+    position: fixed !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 15;
+    height: 100%;
+    box-shadow: 8px 0 24px rgb(0 0 0 / 12%);
+  }
+
+  .doc-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 14;
+    display: block;
+    padding: 0;
+    background: rgb(0 0 0 / 36%);
+    border: 0;
+    cursor: pointer;
+  }
+
+  .doc-scroll {
+    max-width: none;
+    padding: 40px 32px 72px;
+  }
+}
+
+@media (max-width: 639px) {
+  .doc-header {
+    padding: 0 12px;
+  }
+
+  .doc-menu-toggle {
+    margin-right: 8px;
+  }
+
+  .doc-brand-name,
+  .doc-header-divider,
+  .doc-header-title {
+    display: none;
+  }
+
+  .doc-back-home {
+    padding: 0 8px;
+  }
+
+  .doc-scroll {
+    padding: 28px 16px 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-layout *,
+  .doc-layout *::before,
+  .doc-layout *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+:deep(.doc-page [data-anchor]) {
+  scroll-margin-top: 24px;
+}
+
 :deep(.doc-page-hero .ant-typography) {
   margin: 0;
 }
@@ -457,24 +655,25 @@ const handleAnchorClick = (e: MouseEvent, info: { href: string; title: string })
 :deep(.doc-page-eyebrow) {
   color: var(--doc-muted);
   font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 :deep(.doc-page-title) {
-  margin-top: 8px !important;
+  margin-top: 10px !important;
   color: var(--doc-ink);
-  font-size: clamp(28px, 4vw, 38px);
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  font-size: clamp(30px, 4vw, 38px);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
 :deep(.doc-page-summary) {
-  margin-top: 12px !important;
-  color: var(--doc-muted);
+  max-width: 760px;
+  margin-top: 14px !important;
+  color: #595959;
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 </style>
