@@ -10,6 +10,12 @@ export const navItems: NavItem[] = [
     description: 'Iconify 三种用法与自定义图标'
   },
   {
+    key: 'layout',
+    label: '布局 Layout',
+    path: '/components/layout',
+    description: '文档布局与三栏应用布局'
+  },
+  {
     key: 'modal',
     label: '模态框 Modal',
     path: '/components/modal',

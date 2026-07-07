@@ -31,7 +31,7 @@
 - [X] 改进演示站布局和响应式导航，使各功能页面在桌面端和移动端均可直接验证。参见 [Ant Design Vue 风格文档布局优化计划](docs/antdv-style-document-layout.md)。
 - [X] 优化原生滚动条交互，使默认状态更轻量，并增强 hover 和拖拽反馈。参见 [原生滚动条交互优化计划](docs/native-scrollbar-interaction.md)。
 - [X] 拆分组件文档页和文档布局职责，使 `DocLayout` 收敛为布局壳，并整理 `views/` 功能区目录。参见 [组件文档布局职责拆分计划](docs/component-doc-layout-refactor.md)。
-- [ ] 新增左侧 sider、content、右侧 sider 组成的三栏应用布局，并补充 Layout 文档页说明当前两种 layout。参见 [三栏应用布局与 Layout 文档计划](docs/three-column-app-layout.md)。
+- [X] 新增左侧 sider、content、右侧 sider 组成的三栏应用布局，并补充 Layout 文档页说明当前两种 layout。参见 [三栏应用布局与 Layout 文档计划](docs/three-column-app-layout.md)。
 - [ ] 完善按钮样式的 disabled、loading、键盘焦点和无障碍状态，并避免依赖 WebKit 的单一浏览器样式。
 - [ ] 清理或扩展脚手架遗留的 `counter` Pinia store，避免保留没有实际入口的示例代码。
 - [ ] 评估通过 UnoCSS 使用 Iconify；确认收益后再替换当前 `unplugin-icons` 方案，避免同时维护两套约定。

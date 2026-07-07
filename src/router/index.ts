@@ -23,6 +23,12 @@ const router = createRouter({
           meta: { title: '图标 Icon' }
         },
         {
+          path: 'layout',
+          name: 'doc-layout',
+          component: () => import('@/views/components-doc/pages/LayoutDoc.vue'),
+          meta: { title: '布局 Layout' }
+        },
+        {
           path: 'modal',
           name: 'doc-modal',
           component: () => import('@/views/components-doc/pages/ModalDoc.vue'),
