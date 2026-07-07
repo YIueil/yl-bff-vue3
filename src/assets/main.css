@@ -1,30 +1,34 @@
-/* 现代化的滚动条*/
-/* 整个滚动条区域 */
+/* 现代化滚动条 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.32) transparent;
+}
+
 ::-webkit-scrollbar {
-    width: 12px;  /* 垂直滚动条宽度 */
-    height: 12px; /* 水平滚动条高度 */
+  width: 8px;
+  height: 8px;
 }
 
-/* 滚动条轨道 */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
+  background: transparent;
 }
 
-/* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    background-clip: content-box;
+  background: rgba(15, 23, 42, 0.28);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: content-box;
 }
 
-/* 滑块悬停状态 */
 ::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
+  background: rgba(15, 23, 42, 0.42);
+  border-width: 1px;
 }
 
-/* 滚动条角落 */
+::-webkit-scrollbar-thumb:active {
+  background: rgba(15, 23, 42, 0.56);
+}
+
 ::-webkit-scrollbar-corner {
-    background: #f1f1f1;
+  background: transparent;
 }

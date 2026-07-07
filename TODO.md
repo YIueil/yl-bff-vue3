@@ -29,7 +29,7 @@
 ## 低优先级
 
 - [X] 改进演示站布局和响应式导航，使各功能页面在桌面端和移动端均可直接验证。参见 [Ant Design Vue 风格文档布局优化计划](docs/antdv-style-document-layout.md)。
-- [ ] 优化原生滚动条交互，使默认状态更轻量，并增强 hover 和拖拽反馈。参见 [原生滚动条交互优化计划](docs/native-scrollbar-interaction.md)。
+- [X] 优化原生滚动条交互，使默认状态更轻量，并增强 hover 和拖拽反馈。参见 [原生滚动条交互优化计划](docs/native-scrollbar-interaction.md)。
 - [ ] 完善按钮样式的 disabled、loading、键盘焦点和无障碍状态，并避免依赖 WebKit 的单一浏览器样式。
 - [ ] 清理或扩展脚手架遗留的 `counter` Pinia store，避免保留没有实际入口的示例代码。
 - [ ] 评估通过 UnoCSS 使用 Iconify；确认收益后再替换当前 `unplugin-icons` 方案，避免同时维护两套约定。
