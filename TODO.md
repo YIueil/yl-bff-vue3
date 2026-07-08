@@ -21,7 +21,7 @@
 - [X] 将 SVG 转 Iconify JSON 的流程改为可复现的 pnpm 脚本，增加明确的 TypeScript runner，并基于脚本文件位置解析输入输出路径。
 - [X] 优化 ECharts 打包体积；当前页面 chunk 约 562 kB，应评估进一步拆分、异步加载或调整模块边界。参见 [ECharts 打包体积优化计划](docs/echarts-bundle-size-optimization.md)。
 - [ ] 封装可复用的 ECharts 组件或 composable，统一初始化、更新 option、resize 和 dispose 行为。
-- [ ] 为 `VITE_API_BASE_URL` 等客户端环境变量补充 `ImportMetaEnv` 类型，并增加缺失值校验。参见[客户端环境变量类型与缺失值校验计划](docs/client-env-type-and-validation.md)。
+- [X] 为 `VITE_API_BASE_URL` 等客户端环境变量补充 `ImportMetaEnv` 类型，并增加缺失值校验。参见[客户端环境变量类型与缺失值校验计划](docs/client-env-type-and-validation.md)。
 - [X] 修复 Vitest TypeScript 项目引用，使测试文件正确解析 `@/*` alias 和自动导入声明。参见 [Vitest TypeScript 项目引用修复计划](docs/vitest-typescript-project-reference.md)。
 - [ ] 更新 README 中失效或不准确的内容，包括 Modal 组件路径、SVG 生成方式、pnpm 版本和 production 命令含义。
 - [ ] 建立 CI，至少执行依赖安装、类型检查、lint、测试和生产构建。
