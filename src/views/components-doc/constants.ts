@@ -46,6 +46,12 @@ export const navItems: NavItem[] = [
     description: 'vue3-draggable-resizable 单元素'
   },
   {
+    key: 'code-block',
+    label: '代码块 CodeBlock',
+    path: '/components/code-block',
+    description: '语法高亮代码块与复制按钮'
+  },
+  {
     key: 'about',
     label: '关于 About',
     path: '/components/about',

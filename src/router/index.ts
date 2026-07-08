@@ -59,6 +59,12 @@ const router = createRouter({
           meta: { title: '元素拖拽缩放 DragResize' }
         },
         {
+          path: 'code-block',
+          name: 'doc-code-block',
+          component: () => import('@/views/components-doc/pages/CodeBlockDoc.vue'),
+          meta: { title: '代码块 CodeBlock' }
+        },
+        {
           path: 'about',
           name: 'doc-about',
           component: () => import('@/views/components-doc/pages/AboutDoc.vue'),
