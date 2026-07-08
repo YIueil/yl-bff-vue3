@@ -8,10 +8,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AboutContent: typeof import('./src/components/AboutContent.vue')['default']
-    AsyncError: typeof import('./src/components/error/AsyncError.vue')['default']
-    AsyncLoading: typeof import('./src/components/error/AsyncLoading.vue')['default']
+    AsyncError: typeof import('@/components/Error/AsyncError.vue')['default']
+    AsyncLoading: typeof import('@/components/Error/AsyncLoading.vue')['default']
     CodeBlock: typeof import('./src/components/CodeBlock.vue')['default']
-    ErrorBoundary: typeof import('./src/components/error/ErrorBoundary.vue')['default']
+    ErrorBoundary: typeof import('@/components/Error/ErrorBoundary.vue')['default']
     IconUsageGuide: typeof import('./src/components/IconUsageGuide.vue')['default']
     IMdiCheckCircleOutline: typeof import('~icons/mdi/check-circle-outline')['default']
     IMdiClose: typeof import('~icons/mdi/close')['default']

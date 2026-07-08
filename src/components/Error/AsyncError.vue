@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // 异步路由组件加载失败后的视图，由 defineAsyncComponent 的 errorComponent 渲染。
-// Vue 会向该组件传入 error / retry / attempts 三个 prop。
+// Vue 会向该组件传入 Error / retry / attempts 三个 prop。
 
 defineProps<{
   error: unknown

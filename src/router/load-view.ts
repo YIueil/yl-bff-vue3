@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue'
-import AsyncLoading from '@/components/error/AsyncLoading.vue'
-import AsyncError from '@/components/error/AsyncError.vue'
+import AsyncLoading from '@/components/Error/AsyncLoading.vue'
+import AsyncError from '@/components/Error/AsyncError.vue'
 
 type ViewModule = { default: unknown }
 

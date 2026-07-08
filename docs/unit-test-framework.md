@@ -220,7 +220,7 @@ describe('ModalManager', () => {
     expect(cb).toHaveBeenCalledWith(expect.objectContaining({ getKey: expect.any(Function) }))
   })
 
-  it('onEvent 未实现的 eventName 走 console.error', () => {
+  it('onEvent 未实现的 eventName 走 console.Error', () => {
     const err = vi.spyOn(console, 'error').mockImplementation(() => {})
     Modal.open({ key: 'k1' })
     Modal.onEvent('k1', 'unknownEvent')
