@@ -8,6 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AboutContent: typeof import('./src/components/AboutContent.vue')['default']
+    CodeBlock: typeof import('./src/components/CodeBlock.vue')['default']
     IconUsageGuide: typeof import('./src/components/IconUsageGuide.vue')['default']
     IMdiCheckCircleOutline: typeof import('~icons/mdi/check-circle-outline')['default']
     IMdiClose: typeof import('~icons/mdi/close')['default']

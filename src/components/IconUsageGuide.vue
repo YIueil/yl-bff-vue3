@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
 import { ref } from 'vue'
+import CodeBlock from '@/components/CodeBlock.vue'
 
 const dynamicIcons = [
   { label: '在线图标', value: 'mdi:palette-outline' },
@@ -117,7 +118,7 @@ pnpm run icons:generate`
             API。离线部署和严格网络策略环境不应依赖这种方式。
           </p>
         </div>
-        <pre><code>{{ onlineCode }}</code></pre>
+        <CodeBlock :code="onlineCode" language="xml" />
       </div>
 
       <aside class="notice">
@@ -152,7 +153,7 @@ pnpm run icons:generate`
             <code>i-mdi-*</code> 组件。
           </p>
         </div>
-        <pre><code>{{ offlineCode }}</code></pre>
+        <CodeBlock :code="offlineCode" language="xml" />
       </div>
     </section>
 
@@ -217,7 +218,7 @@ pnpm run icons:generate`
         </article>
       </div>
 
-      <pre class="full-code"><code>{{ customCode }}</code></pre>
+      <CodeBlock :code="customCode" language="xml" class="code-gap" />
     </section>
 
     <section class="guide-section" aria-labelledby="common-title">
@@ -265,7 +266,7 @@ pnpm run icons:generate`
         </article>
       </div>
 
-      <pre class="full-code"><code>{{ dynamicCode }}</code></pre>
+      <CodeBlock :code="dynamicCode" language="xml" class="code-gap" />
       <aside class="notice">
         动态值适用于 <code>&lt;Icon :icon="iconName" /&gt;</code>。离线的
         <code>&lt;i-mdi-home /&gt;</code> 是构建期组件，不应使用运行时字符串拼接组件名。
@@ -306,7 +307,7 @@ pnpm run icons:generate`
             <span>以 <code>custom:文件名</code> 引用图标，并在本页检查尺寸和颜色表现。</span>
           </li>
         </ol>
-        <pre><code>{{ generateCode }}</code></pre>
+        <CodeBlock :code="generateCode" language="bash" />
       </div>
 
       <div class="file-flow" aria-label="自定义图标生成流程">
@@ -516,23 +517,6 @@ code {
   color: #dc2626;
 }
 
-pre {
-  min-width: 0;
-  margin: 0;
-  padding: 20px;
-  overflow-x: auto;
-  color: #dbe6ff;
-  background: #172033;
-  border: 1px solid #26324a;
-  border-radius: 14px;
-  line-height: 1.65;
-  tab-size: 2;
-}
-
-.full-code {
-  margin-top: 20px;
-}
-
 .notice {
   margin-top: 18px;
   padding: 14px 16px;
@@ -541,6 +525,10 @@ pre {
   border-left: 4px solid #6685e6;
   border-radius: 8px;
   line-height: 1.7;
+}
+
+.code-gap {
+  margin-top: 20px;
 }
 
 .custom-grid {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
+import CodeBlock from '@/components/CodeBlock.vue'
 
 interface Item {
   id: number
@@ -65,11 +66,11 @@ const apiRows = [
               <span class="doc-list-id">#{{ item.id }}</span>
             </div>
           </VueDraggable>
-          <pre class="doc-state">{{ JSON.stringify(list, null, 2) }}</pre>
+          <CodeBlock :code="JSON.stringify(list, null, 2)" language="json" :show-copy="false" />
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ source }}</code></pre>
+        <CodeBlock :code="source" language="xml" />
       </a-tab-pane>
     </a-tabs>
 
@@ -143,31 +144,7 @@ const apiRows = [
   font-size: 12px;
 }
 
-.doc-state {
-  max-height: 200px;
-  margin: 0;
-  padding: 12px;
-  overflow: auto;
-  color: #dbe6ff;
-  background: #172033;
-  border-radius: 6px;
-  font-size: 12px;
-  line-height: 1.6;
-}
-
 .doc-table {
   margin-bottom: 24px;
-}
-
-.doc-pre {
-  padding: 16px;
-  overflow-x: auto;
-  color: #dbe6ff;
-  background: #172033;
-  border: 1px solid #26324a;
-  border-radius: 8px;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
-  font-size: 13px;
-  line-height: 1.6;
 }
 </style>
