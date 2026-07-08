@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import '@/core/svg-import'
+import '@/core/env'
 
 // 拖拽和大小定制组件
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
