@@ -140,6 +140,8 @@ const h = ref(0)
 const active = ref(false)
 const minimize = ref(false)
 const maximize = ref(false)
+// 进入最小化/最大化前保存的正常态几何，恢复时还原（位置与大小）
+const savedRect = ref<{ x: number; y: number; w: number; h: number } | null>(null)
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(Math.max(value, min), max)
@@ -190,8 +192,19 @@ const clampToViewport = (): void => {
   y.value = clamp(y.value, 0, Math.max(0, vh.value - h.value))
 }
 
-const resetToNormal = (): void => {
-  if (isMobile.value) {
+// 进入最小化/最大化前保存当前正常态几何
+const captureNormal = (): void => {
+  savedRect.value = { x: x.value, y: y.value, w: w.value, h: h.value }
+}
+
+// 恢复时优先还原最小化/最大化前的位置与大小；无记录时回退到默认布局
+const restoreNormal = (): void => {
+  if (savedRect.value) {
+    x.value = savedRect.value.x
+    y.value = savedRect.value.y
+    w.value = savedRect.value.w
+    h.value = savedRect.value.h
+  } else if (isMobile.value) {
     applyMaximized()
   } else {
     applyCentered()
@@ -249,6 +262,7 @@ const print = (val: string): void => {
 }
 
 const windowMinimize = (): void => {
+  captureNormal()
   minimize.value = true
   if (props.modalKey !== undefined) {
     Modal.registerMinimized(props.modalKey)
@@ -261,14 +275,15 @@ const windowResize = (): void => {
   if (props.modalKey !== undefined) {
     Modal.unregisterMinimized(props.modalKey)
   }
-  resetToNormal()
+  restoreNormal()
 }
 
 const windowMaximize = (): void => {
   if (maximize.value) {
     maximize.value = false
-    resetToNormal()
+    restoreNormal()
   } else {
+    captureNormal()
     maximize.value = true
     applyMaximized()
   }
