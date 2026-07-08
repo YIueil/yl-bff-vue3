@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import CodeBlock from '@/components/CodeBlock.vue'
 
 const x = ref(100)
 const y = ref(100)
@@ -106,7 +107,7 @@ const apiRows = [
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ source }}</code></pre>
+        <CodeBlock :code="source" language="xml" />
       </a-tab-pane>
     </a-tabs>
 
@@ -179,17 +180,5 @@ const apiRows = [
 
 .doc-table {
   margin-bottom: 24px;
-}
-
-.doc-pre {
-  padding: 16px;
-  overflow-x: auto;
-  color: #dbe6ff;
-  background: #172033;
-  border: 1px solid #26324a;
-  border-radius: 8px;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
-  font-size: 13px;
-  line-height: 1.6;
 }
 </style>

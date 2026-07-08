@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, inject } from 'vue'
 import { Modal } from '@/utils/modal-manager'
+import CodeBlock from '@/components/CodeBlock.vue'
 import AboutContent, { type AboutContentExpose } from '@/components/AboutContent.vue'
 import ModalContextProbe from '@/components/Modal/ModalContextProbe.vue'
 import {
@@ -234,7 +235,7 @@ const apiRows = [
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ declarativeSource }}</code></pre>
+        <CodeBlock :code="declarativeSource" language="xml" />
       </a-tab-pane>
     </a-tabs>
 
@@ -266,7 +267,7 @@ const apiRows = [
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ apiSource }}</code></pre>
+        <CodeBlock :code="apiSource" language="typescript" />
       </a-tab-pane>
     </a-tabs>
 
@@ -278,7 +279,7 @@ const apiRows = [
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ optionsSource }}</code></pre>
+        <CodeBlock :code="optionsSource" language="typescript" />
       </a-tab-pane>
     </a-tabs>
 
@@ -300,7 +301,7 @@ const apiRows = [
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ trustedSource }}</code></pre>
+        <CodeBlock :code="trustedSource" language="typescript" />
       </a-tab-pane>
     </a-tabs>
 
@@ -360,18 +361,6 @@ const apiRows = [
   margin: 0;
   color: #5d6678;
   font-size: 12px;
-}
-
-.doc-pre {
-  padding: 16px;
-  overflow-x: auto;
-  color: #dbe6ff;
-  background: #172033;
-  border: 1px solid #26324a;
-  border-radius: 8px;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
-  font-size: 13px;
-  line-height: 1.6;
 }
 
 .doc-table {

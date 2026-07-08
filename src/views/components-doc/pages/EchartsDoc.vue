@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import type { EChartsType } from 'echarts/core'
 import echarts, { type ECOption } from '@/core/echarts-import'
+import CodeBlock from '@/components/CodeBlock.vue'
 
 const echartsDom = ref<HTMLDivElement | null>(null)
 const echartsInstance = shallowRef<EChartsType | null>(null)
@@ -134,13 +135,13 @@ const apiRows = [
     <a-typography-paragraph>
       所有按需模块集中在 <code>src/core/echarts-import.ts</code> 注册，不要在页面中改为导入完整 <code>echarts</code> 包。
     </a-typography-paragraph>
-    <pre class="doc-pre"><code>{{ source }}</code></pre>
+    <CodeBlock :code="source" language="javascript" />
 
     <a-typography-title id="lifecycle" data-anchor="lifecycle" :level="2">生命周期</a-typography-title>
     <a-typography-paragraph>
       DOM mounted 后初始化，<code>ResizeObserver</code> 监听容器尺寸，unmounted 前 <code>dispose()</code>。
     </a-typography-paragraph>
-    <pre class="doc-pre"><code>{{ lifecycleSource }}</code></pre>
+    <CodeBlock :code="lifecycleSource" language="typescript" />
 
     <a-typography-title id="api" data-anchor="api" :level="2">已注册模块</a-typography-title>
     <a-table
@@ -181,18 +182,6 @@ const apiRows = [
   height: 360px;
   min-width: 100px;
   min-height: 360px;
-}
-
-.doc-pre {
-  padding: 16px;
-  overflow-x: auto;
-  color: #dbe6ff;
-  background: #172033;
-  border: 1px solid #26324a;
-  border-radius: 8px;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
-  font-size: 13px;
-  line-height: 1.6;
 }
 
 .doc-table {

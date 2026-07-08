@@ -25,6 +25,7 @@
     "@vueuse/core": "^13.5.0",
     "ant-design-vue": "~4.2.6",
     "echarts": "^6.0.0",
+    "highlight.js": "^11.11.1",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
     "vue-draggable-plus": "^0.6.0",

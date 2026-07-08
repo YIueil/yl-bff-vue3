@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CodeBlock from '@/components/CodeBlock.vue'
+
 const basicTab = ref<'preview' | 'code'>('preview')
 
 const typeSource = `<a-button type="primary">主要按钮</a-button>
@@ -67,7 +69,7 @@ const apiRows = [
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ typeSource }}</code></pre>
+        <CodeBlock :code="typeSource" language="xml" />
       </a-tab-pane>
     </a-tabs>
 
@@ -81,7 +83,7 @@ const apiRows = [
         </a-card>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ sizeSource }}</code></pre>
+        <CodeBlock :code="sizeSource" language="xml" />
       </a-tab-pane>
     </a-tabs>
 
@@ -95,7 +97,7 @@ const apiRows = [
         </a-space>
       </a-tab-pane>
       <a-tab-pane key="code" tab="代码">
-        <pre class="doc-pre"><code>{{ stateSource }}</code></pre>
+        <CodeBlock :code="stateSource" language="xml" />
       </a-tab-pane>
     </a-tabs>
 
@@ -141,17 +143,5 @@ const apiRows = [
 
 .doc-table {
   margin-bottom: 24px;
-}
-
-.doc-pre {
-  padding: 16px;
-  overflow-x: auto;
-  color: #dbe6ff;
-  background: #172033;
-  border: 1px solid #26324a;
-  border-radius: 8px;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
-  font-size: 13px;
-  line-height: 1.6;
 }
 </style>
