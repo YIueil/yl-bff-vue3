@@ -262,7 +262,10 @@ const print = (val: string): void => {
 }
 
 const windowMinimize = (): void => {
-  captureNormal()
+  // 仅从正常态进入最小化时保存几何；已最大化则保留进入最大化前保存的正常态
+  if (!minimize.value && !maximize.value) {
+    captureNormal()
+  }
   minimize.value = true
   if (props.modalKey !== undefined) {
     Modal.registerMinimized(props.modalKey)
@@ -275,7 +278,12 @@ const windowResize = (): void => {
   if (props.modalKey !== undefined) {
     Modal.unregisterMinimized(props.modalKey)
   }
-  restoreNormal()
+  // 若最小化前处于最大化，则恢复全屏以保持状态一致；否则还原正常态
+  if (maximize.value) {
+    applyMaximized()
+  } else {
+    restoreNormal()
+  }
 }
 
 const windowMaximize = (): void => {
@@ -283,7 +291,10 @@ const windowMaximize = (): void => {
     maximize.value = false
     restoreNormal()
   } else {
-    captureNormal()
+    // 仅从正常态进入最大化时保存几何
+    if (!minimize.value && !maximize.value) {
+      captureNormal()
+    }
     maximize.value = true
     applyMaximized()
   }
