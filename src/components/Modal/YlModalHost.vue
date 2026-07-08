@@ -102,6 +102,7 @@ const renderModal = (modalEntry: ModalObject): VNode => {
         {
           visible: modalEntry.visible,
           show: modalEntry.showModal,
+          modalKey: modalEntry.key,
           showMask: options.showMask,
           showHeader: options.showHeader,
           showBody: true,

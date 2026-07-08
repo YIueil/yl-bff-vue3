@@ -1,5 +1,5 @@
 import type { App, ComponentPublicInstance } from 'vue'
-import { nextTick, shallowReactive } from 'vue'
+import { nextTick, ref, shallowReactive } from 'vue'
 import type {
   EventHandler,
   ModalInstance,
@@ -24,6 +24,7 @@ export class ModalManager implements ModalManagerInterface {
   private static instance: ModalManager
   private modalEntryMap = shallowReactive(new Map<ModalKey, ModalObject>())
   private hostIds = new Set<symbol>()
+  private minimizedKeys = ref<ModalKey[]>([])
 
   public static getInstance(): ModalManager {
     if (!ModalManager.instance) {
@@ -167,6 +168,25 @@ export class ModalManager implements ModalManagerInterface {
     for (const key of keys) {
       this.close(key)
     }
+    this.minimizedKeys.value = []
+  }
+
+  public registerMinimized(key: ModalKey): void {
+    if (!this.minimizedKeys.value.includes(key)) {
+      this.minimizedKeys.value = [...this.minimizedKeys.value, key]
+    }
+  }
+
+  public unregisterMinimized(key: ModalKey): void {
+    this.minimizedKeys.value = this.minimizedKeys.value.filter((k) => k !== key)
+  }
+
+  public getMinimizedKeys(): ModalKey[] {
+    return this.minimizedKeys.value
+  }
+
+  public getMinimizedIndex(key: ModalKey): number {
+    return this.minimizedKeys.value.indexOf(key)
   }
 }
 

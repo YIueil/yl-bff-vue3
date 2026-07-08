@@ -20,6 +20,14 @@ export class ModalManagerInterface {
   public closeAll(): void
   public hide(key: ModalKey): void
   public show(key: ModalKey): void
+  /** 登记最小化窗口，用于底部等距排列。 */
+  public registerMinimized(key: ModalKey): void
+  /** 取消最小化登记。 */
+  public unregisterMinimized(key: ModalKey): void
+  /** 返回响应式的最小化窗口 key 列表。 */
+  public getMinimizedKeys(): ModalKey[]
+  /** 返回指定 key 在最小化列表中的下标。 */
+  public getMinimizedIndex(key: ModalKey): number
 }
 
 export interface ModalInstance<T = ComponentWithUnknownProps> {

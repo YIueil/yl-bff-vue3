@@ -35,7 +35,7 @@
               <div class="header-title">
                 <slot name="header">[请定义标题]</slot>
               </div>
-              <div class="header-btns" @mousedown.stop>
+              <div class="header-btns" @mousedown.stop @touchstart.stop>
                 <IMdiMinus v-if="!minimize" @click="windowMinimize" />
                 <IMdiResize v-if="minimize" @click="windowResize" />
                 <IMdiWindowMaximize v-if="!maximize && !minimize" @click="windowMaximize" />
@@ -44,11 +44,11 @@
               </div>
             </div>
 
-            <div v-show="localShowBody" class="modal-body" @mousedown.stop>
+            <div v-show="localShowBody" class="modal-body" @mousedown.stop @touchstart.stop>
               <slot name="body">[请定义内容]</slot>
             </div>
 
-            <div v-show="localShowFooter" class="modal-footer" @mousedown.stop>
+            <div v-show="localShowFooter" class="modal-footer" @mousedown.stop @touchstart.stop>
               <slot name="footer">
                 <a-button @click="$emit('ok')">OK</a-button>
                 <a-button @click="$emit('cancel')">Cancel</a-button>
@@ -62,13 +62,15 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useWindowSize } from '@vueuse/core'
+import { Modal } from '@/utils/modal-manager'
 
 const emits = defineEmits(['event', 'close', 'ok', 'cancel'])
 const props = defineProps({
   visible: {
     type: Boolean,
-    default: false,
+    default: false
   },
   show: {
     type: Boolean,
@@ -109,87 +111,179 @@ const props = defineProps({
   draggable: {
     type: Boolean,
     default: true
+  },
+  // 可选：用于最小化排列的跨实例协调；声明式无 key 时使用单点左下角
+  modalKey: {
+    type: [String, Number],
+    default: undefined
   }
 })
-const x = ref(0)
-const y = ref(0)
-const h = ref(0)
-const w = ref(0)
+
+// 视口尺寸（单一来源，响应式）
+const { width: vw, height: vh } = useWindowSize()
+
+// 布局常量
+const MARGIN = 24
+const SMALL_BREAKPOINT = 640
+const MIN_W = 320
+const MIN_H = 200
+const MINIMIZED_W = 200
+const MINIMIZED_H = 36
+const GAP = 8
+
 const initW = ref(900)
 const initH = ref(560)
+const x = ref(0)
+const y = ref(0)
+const w = ref(0)
+const h = ref(0)
 const active = ref(false)
 const minimize = ref(false)
 const maximize = ref(false)
-const localShowMask = ref(props.showMask)
-const localShowBody = ref(props.showBody)
-const localShowFooter = ref(props.showFooter)
-const localResizable = ref(props.resizable)
-const localDraggable = ref(props.draggable)
+
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(Math.max(value, min), max)
+
+const isMobile = computed(() => vw.value < SMALL_BREAKPOINT)
+const defaultW = computed(() => clamp(initW.value, MIN_W, Math.max(MIN_W, vw.value - MARGIN * 2)))
+const defaultH = computed(() => clamp(initH.value, MIN_H, Math.max(MIN_H, vh.value - MARGIN * 2)))
+
+// props 响应式派生；最小化态以内部状态覆盖
+const localShowMask = computed(() => !minimize.value && props.showMask)
+const localShowBody = computed(() => !minimize.value && props.showBody)
+const localShowFooter = computed(() => !minimize.value && props.showFooter)
+const localResizable = computed(
+  () => !minimize.value && !maximize.value && props.resizable && !isMobile.value
+)
+const localDraggable = computed(
+  () => !minimize.value && !maximize.value && props.draggable && !isMobile.value
+)
+
+// 布局函数
+const applyCentered = (): void => {
+  w.value = defaultW.value
+  h.value = defaultH.value
+  x.value = (vw.value - w.value) / 2
+  y.value = (vh.value - h.value) / 2
+}
+
+const applyMaximized = (): void => {
+  w.value = vw.value
+  h.value = vh.value
+  x.value = 0
+  y.value = 0
+}
+
+const applyMinimized = (index: number): void => {
+  w.value = MINIMIZED_W
+  h.value = MINIMIZED_H
+  x.value = index * (MINIMIZED_W + GAP)
+  y.value = vh.value - MINIMIZED_H
+}
+
+const clampToViewport = (): void => {
+  const maxW = Math.max(MIN_W, vw.value - MARGIN * 2)
+  const maxH = Math.max(MIN_H, vh.value - MARGIN * 2)
+  if (w.value > maxW) w.value = maxW
+  if (h.value > maxH) h.value = maxH
+  x.value = clamp(x.value, 0, Math.max(0, vw.value - w.value))
+  y.value = clamp(y.value, 0, Math.max(0, vh.value - h.value))
+}
+
+const resetToNormal = (): void => {
+  if (isMobile.value) {
+    applyMaximized()
+  } else {
+    applyCentered()
+  }
+}
+
+const relayoutMinimized = (): void => {
+  const index = props.modalKey !== undefined ? Modal.getMinimizedIndex(props.modalKey) : 0
+  applyMinimized(index)
+}
 
 onMounted(() => {
-  const { width, height } = useWindowSize()
-  x.value = (width.value - initW.value) / 2
-  y.value = (height.value - initH.value) / 2
+  if (isMobile.value) {
+    applyMaximized()
+  } else {
+    applyCentered()
+  }
 })
 
-const print = function (val: string) {
+// 视口尺寸变化时的适配：最大化跟随、最小化重排、小屏铺满、正常态仅约束不强行居中
+watch([vw, vh], () => {
+  if (maximize.value) {
+    applyMaximized()
+  } else if (minimize.value) {
+    relayoutMinimized()
+  } else if (isMobile.value) {
+    applyMaximized()
+  } else {
+    clampToViewport()
+  }
+})
+
+// 最小化排列：自身最小化态或最小化列表变化时重排
+watch(
+  [
+    () => minimize.value,
+    () => Modal.getMinimizedKeys().length,
+    () => Modal.getMinimizedIndex(props.modalKey ?? '')
+  ],
+  () => {
+    if (minimize.value) {
+      relayoutMinimized()
+    }
+  }
+)
+
+onBeforeUnmount(() => {
+  if (minimize.value && props.modalKey !== undefined) {
+    Modal.unregisterMinimized(props.modalKey)
+  }
+})
+
+const print = (val: string): void => {
   console.log(val)
 }
 
-const windowMinimize = function () {
-  const { height } = useWindowSize()
+const windowMinimize = (): void => {
   minimize.value = true
-  localResizable.value = false
-  localShowBody.value = false
-  localShowFooter.value = false
-  localShowMask.value = false
-  // 宽高保留头部范围 移动到左下角
-  h.value = 36
-  w.value = 200
-  x.value = 0
-  y.value = height.value - 36
-}
-
-const windowResize = function () {
-  const { width, height } = useWindowSize()
-  minimize.value = false
-  localResizable.value = props.resizable
-  localShowBody.value = props.showBody
-  localShowFooter.value = props.showFooter
-  localShowMask.value = props.showMask
-  h.value = initH.value
-  w.value = initW.value
-  x.value = (width.value - initW.value) / 2
-  y.value = (height.value - initH.value) / 2
-}
-
-const windowMaximize = function () {
-  const { width, height } = useWindowSize()
-  if (maximize.value) {
-    h.value = initH.value
-    w.value = initW.value
-    x.value = (width.value - initW.value) / 2
-    y.value = (height.value - initH.value) / 2
-  } else {
-    h.value = height.value
-    w.value = width.value
-    x.value = 0
-    y.value = 0
+  if (props.modalKey !== undefined) {
+    Modal.registerMinimized(props.modalKey)
   }
-  maximize.value = !maximize.value
+  relayoutMinimized()
 }
 
-const onMaskClick = function () {
+const windowResize = (): void => {
+  minimize.value = false
+  if (props.modalKey !== undefined) {
+    Modal.unregisterMinimized(props.modalKey)
+  }
+  resetToNormal()
+}
+
+const windowMaximize = (): void => {
+  if (maximize.value) {
+    maximize.value = false
+    resetToNormal()
+  } else {
+    maximize.value = true
+    applyMaximized()
+  }
+}
+
+const onMaskClick = (): void => {
   if (props.clickMaskClose) {
     modalClose()
   }
 }
 
-const modalClose = function () {
+const modalClose = (): void => {
   emits('close')
   emits('event', 'close')
 }
-
 </script>
 
 <style scoped>
@@ -304,6 +398,8 @@ const modalClose = function () {
   flex: 1;
   padding: 5px;
   overflow-y: auto;
+  /* 触屏下允许内容区滚动，不被拖拽拦截 */
+  touch-action: pan-y;
 }
 
 .modal-footer {
